@@ -4,6 +4,8 @@
 
 ### Eclipse ###
 
+.vscode
+
 .metadata
 bin/
 tmp/
