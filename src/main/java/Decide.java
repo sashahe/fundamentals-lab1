@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public class Decide {
   private Parameters parameters;
   private double[] X = new double[100];
   private double[] Y = new double[100];
@@ -8,7 +8,7 @@ public class Main {
   private CONNECTORS[][] LICM = new CONNECTORS[15][15];
   private boolean[] PUV = new boolean[15];
 
-  private boolean[] CVM = new boolean[15];
+  private boolean[] CMV = new boolean[15];
   private boolean[][] PUM = new boolean[15][15];
   private boolean[] FUV = new boolean[15];
 
@@ -143,13 +143,13 @@ public class Main {
     }
   };
 
-  public Main() {
+  public Decide() {
     this.parameters = new Parameters();
     decide();
   }
 
   public static void main(String args[]) {
-    Main main = new Main();
+    Decide decide = new Decide();
   }
 
   private COMPTYPE doubleCompare(double a, double b) {
@@ -157,6 +157,6 @@ public class Main {
       return COMPTYPE.EQ;
     if (a < b)
       return COMPTYPE.LT;
-    return COMPTYPE.GT;
+    return COMPTYPE.GQ;
   }
 }
