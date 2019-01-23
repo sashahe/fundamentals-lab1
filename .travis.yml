@@ -4,4 +4,3 @@ jdk:
 
 script:
   - gradle build
-  - gradle test
