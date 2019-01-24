@@ -29,9 +29,12 @@ public class Decide {
     return false;
   }
 
-  // There exists at least one set of three consecutive data points
-  // that cannot all be contained within or on a circle of radius RADIUS1.
-  // (0 ≤ RADIUS1)
+  /*
+   * There exists at least one set of three consecutive data points 
+   * that cannot all be contained within or on a circle of radius RADIUS1.
+   * (0 ≤ RADIUS1)
+   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
+  */
   public boolean LIC1() {
     if (numpoints < 3 && 0 <= parameters.RADIUS1) {
       return false;
