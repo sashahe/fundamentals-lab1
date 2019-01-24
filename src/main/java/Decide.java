@@ -21,7 +21,7 @@ public class Decide {
   };
 
   private enum COMPTYPE {
-    LT, EQ, GQ
+    LT, EQ, GT
   };
 
   // Returns true if LIC0 is true
@@ -157,6 +157,6 @@ public class Decide {
       return COMPTYPE.EQ;
     if (a < b)
       return COMPTYPE.LT;
-    return COMPTYPE.GQ;
+    return COMPTYPE.GT;
   }
 }
