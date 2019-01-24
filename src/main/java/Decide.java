@@ -24,14 +24,6 @@ public class Decide {
     LT, EQ, GT
   };
 
-  private double getArea(int i, int j, int k) {
-      double Ax, Bx, Cx, Ay, By, Cy;
-      Ax = X[i]; Ay = Y[i];
-      Bx = X[j]; By = Y[j];
-      Cx = X[k]; Cy = Y[k];
-      double area = Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
-  }
-
   // Returns true if LIC0 is true
   public boolean LIC0() {
     return false;
@@ -51,9 +43,9 @@ public class Decide {
   // There exists at least one set of three consecutive data points
   // that are the vertices of a triangle with area greater than AREA1. (0 ≤ AREA1)
   public boolean LIC3() {
-    if (numpoints < 3)
+    if (this.numpoints < 3)
       return false;
-    for (int i = 0; i < numpoints - 2; i++) {
+    for (int i = 0; i < this.numpoints - 2; i++) {
       if (doubleCompare(getArea(i, i+1, i+2), this.parameters.AREA1) == COMPTYPE.GT)
         return true;
     }
@@ -91,7 +83,18 @@ public class Decide {
   }
 
   // Returns true if LIC10 is true
+  //There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
+  //intervening points, respectively, that are the vertices of a triangle with area greater
+  // than AREA1. The condition is not met when NUMPOINTS < 5.
   public boolean LIC10() {
+    if (this.numpoints < 5)
+      return false;
+    int e = this.parameters.E_PTS;
+    int f = this.parameters.F_PTS;
+    for (int i = 0; i < this.numpoints - (2 + e + f); i++) {
+      if (doubleCompare(getArea(i, i+e+1, i+e+1+f+1), this.parameters.AREA1) == COMPTYPE.GT)
+        return true;
+    }
     return false;
   }
 
@@ -173,5 +176,13 @@ public class Decide {
     if (a < b)
       return COMPTYPE.LT;
     return COMPTYPE.GT;
+  }
+
+  private double getArea(int i, int j, int k) {
+    double Ax, Bx, Cx, Ay, By, Cy;
+    Ax = X[i]; Ay = Y[i];
+    Bx = X[j]; By = Y[j];
+    Cx = X[k]; Cy = Y[k];
+    return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
   }
 } 
