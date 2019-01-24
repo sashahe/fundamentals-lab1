@@ -29,8 +29,42 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC1 is true
+  // There exists at least one set of three consecutive data points
+  // that cannot all be contained within or on a circle of radius RADIUS1.
+  // (0 ≤ RADIUS1)
   public boolean LIC1() {
+    if (numpoints < 3 && 0 <= parameters.RADIUS1) {
+      return false;
+    }
+
+    double X1, Y1, X2, Y2, X3, Y3;
+    for (int i = 0; i < numpoints - 2; i++) {
+      X1 = X[i];
+      Y1 = Y[i];
+      X2 = X[i + 1];
+      Y2 = Y[i + 1];
+      X3 = X[i + 2];
+      Y3 = Y[i + 2];
+
+      double dividePart =  2 * ((X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2));
+      double x = 
+      (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (Y2 - Y3) + 
+      (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (Y3 - Y1) + 
+      (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (Y1 - Y2);
+      x /= dividePart;
+
+      double y = 
+      (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (X3 - X2) + 
+      (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
+      (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
+      y /= dividePart;
+
+      double radius = Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+
+      if (radius > parameters.RADIUS1) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -100,7 +134,7 @@ public class Decide {
   }
 
   // Set CMV[i] = true if LIC i == true
-  public void caLICulateCMV() {
+  public void calculateCMV() {
     CMV[0] = LIC0();
     CMV[1] = LIC1();
     CMV[2] = LIC2();
@@ -118,11 +152,11 @@ public class Decide {
     CMV[14] = LIC14();
   };
 
-  public void caLICulatePUM() {
+  public void calculatePUM() {
     // Matrix operations between CMV and LICM to get PUM
   }
 
-  public void caLICulateFUV() {
+  public void calculateFUV() {
     // PUM (***) PUV -> FUV
   }
 
@@ -132,9 +166,9 @@ public class Decide {
   }
 
   public void decide() {
-    caLICulateCMV();
-    caLICulatePUM();
-    caLICulateFUV();
+    calculateCMV();
+    calculatePUM();
+    calculateFUV();
 
     if (checkFUV()) {
       System.out.println("yes");
