@@ -24,6 +24,14 @@ public class Decide {
     LT, EQ, GT
   };
 
+  private double getArea(int i, int j, int k) {
+      double Ax, Bx, Cx, Ay, By, Cy;
+      Ax = X[i]; Ay = Y[i];
+      Bx = X[j]; By = Y[j];
+      Cx = X[k]; Cy = Y[k];
+      double area = Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
+  }
+
   // Returns true if LIC0 is true
   public boolean LIC0() {
     return false;
@@ -45,13 +53,8 @@ public class Decide {
   public boolean LIC3() {
     if (numpoints < 3)
       return false;
-    double Ax, Bx, Cx, Ay, By, Cy;
     for (int i = 0; i < numpoints - 2; i++) {
-      Ax = X[i];   Ay = Y[i];
-      Bx = X[i+1]; By = Y[i+1];
-      Cx = X[i+2]; Cy = Y[i+2];
-      double area = Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
-      if (doubleCompare(area,this.parameters.AREA1) == COMPTYPE.GT)
+      if (doubleCompare(getArea(i, i+1, i+2), this.parameters.AREA1) == COMPTYPE.GT)
         return true;
     }
     return false;
