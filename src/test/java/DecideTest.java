@@ -28,4 +28,52 @@ public class DecideTest {
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC3());
   }
+
+  @Test
+  public void testCalculatePUM() {
+    Decide decide = new Decide();
+    decide.CMV[3] = true;
+
+    // Test a requirement where only LIC3 must be true
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        if (i  == 3 || j == 3) {
+          decide.LCM[i][j] = Decide.CONNECTORS.ORR;
+        } else {
+         decide.LCM[i][j] = Decide.CONNECTORS.NOTUSED;
+        }
+      }
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Test a requirement where everything must be true
+    for (int i = 0; i < 15; i++) {
+      decide.CMV[i] = true;
+      for (int j =0; j < 15; j++) {
+        decide.LCM[i][j] = Decide.CONNECTORS.ANDD;
+      }
+    }
+
+    decide.calculatePUM();
+
+    // All CMVs are false
+    for (int i = 0; i < 15; i++) {
+       decide.CMV[i] = false;
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertFalse(decide.PUM[i][j]);
+      }
+    }
+  }
 }
