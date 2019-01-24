@@ -114,8 +114,20 @@ public class Decide {
   }
 
   // Returns true if LIC14 is true
+  // LIC10 + In addition, there exist three data points (which can be the same or different
+  // from the three data points just mentioned) separated by exactly E PTS and F PTS
+  // consecutive intervening points, respectively, that are the vertices of a triangle
+  // with area less than AREA2. Both parts must be true for the LIC to be true.
+  // The condition is not met when NUMPOINTS < 5.
   public boolean LIC14() {
-    return false;
+    if (this.numpoints < 5 || !LIC10()) return false;
+      int e = this.parameters.E_PTS;
+      int f = this.parameters.F_PTS;
+      for (int i = 0; i < this.numpoints - (2 + e + f); i++) {
+        if (doubleCompare(getArea(i, i+e+1, i+e+1+f+1), this.parameters.AREA2) == COMPTYPE.LT)
+          return true;
+      }
+      return false;
   }
 
   // Set CMV[i] = true if LIC i == true
