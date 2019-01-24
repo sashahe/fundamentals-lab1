@@ -8,7 +8,7 @@ public class DecideTest {
   public void testLIC3() {
     Decide decide = new Decide();
 
-    // No input points 
+    // No input points
     assertFalse(decide.LIC3());
 
     // Test with three points that are all the same
