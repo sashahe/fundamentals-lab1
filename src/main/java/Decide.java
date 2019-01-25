@@ -46,21 +46,20 @@ public class Decide {
   //There exists at least one set of three consecutive data points
   //that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
-    if((0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints)) {
-      double X1, X2, X3, Y1, Y2, Y3;
-      double angle;
-      for(int i = 0; i < numpoints - 2; i++) {
-        X1 = X[i];    Y1 = Y[i];
-        X2 = X[i+1];  Y2 = Y[i+1];
-        X3 = X[i+2];  Y3 = Y[i+2];
-        //The first and last point should not coincide with the vertex (second point)
-        if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
+    double X1, X2, X3, Y1, Y2, Y3, angle;
+    //Constraint condition #1
+    if(!(0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints))
+      return false;
+    for(int i = 0; i < numpoints - 2; i++) {
+      X1 = X[i];    Y1 = Y[i];
+      X2 = X[i+1];  Y2 = Y[i+1];
+      X3 = X[i+2];  Y3 = Y[i+2];
+      //The first and last point should not coincide with the vertex (second point)
+      if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2)))
           return false;
-        }
-        angle = calculateAngle(i, i+1, i+2);
-        if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
+      angle = calculateAngle(i, i+1, i+2);
+      if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
           return true;
-      }
     }
     return false;
   }
@@ -86,49 +85,47 @@ public class Decide {
     quad1 = quad2 = quad3 = quad4 = false;
     int numQuads = 0;
     //Check constraint condition #1
-    if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
-      //Check constraint condition #2
-      if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
-      for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
-        for(int j = 0; j < parameters.Q_PTS; j++) {
-          //Check if the point is in quadrant number 1
-          if((X[i+j] >= 0) && (Y[i+j] >= 0)) {
-            if(!quad1) {
-              numQuads++;
-              quad1 = true;
-            }
-          }
-          //Checks if the point is in quadrant number 2
-          if ((X[i+j] <= 0) && (Y[i+j] >= 0)) {
-            if(!quad2) {
-              numQuads++;
-              quad2 = true;
-            }
-          }
-          //Checks if the point is in quadrant number 3
-          if ((X[i+j] <= 0) && (Y[i+j] <= 0)) {
-            if(!quad3) {
-              numQuads++;
-              quad3 = true;
-            }
-          }
-          //Checks if the point is in quadrant number 4
-          if ((X[i+j] >= 0) && (Y[i+j] <= 0)) {
-            if(!quad4) {
-              numQuads++;
-              quad4 = true;
-            }
+    if(!(2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints))
+      return false;
+    //Check constraint condition #2
+    if(!(1 <= parameters.QUADS) && (parameters.QUADS <= 3))
+      return false;
+    for (int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+      for (int j = 0; j < parameters.Q_PTS; j++) {
+        //Check if the point is in quadrant number 1
+        if ((X[i + j] >= 0) && (Y[i + j] >= 0)) {
+          if (!quad1) {
+            numQuads++;
+            quad1 = true;
           }
         }
-        if(numQuads > parameters.QUADS)
-          return true;
+        //Checks if the point is in quadrant number 2
+        if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
+          if (!quad2) {
+            numQuads++;
+            quad2 = true;
+          }
+        }
+        //Checks if the point is in quadrant number 3
+        if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
+          if (!quad3) {
+            numQuads++;
+            quad3 = true;
+          }
+        }
+          //Checks if the point is in quadrant number 4
+        if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
+          if (!quad4) {
+            numQuads++;
+            quad4 = true;
+          }
+        }
       }
-      return false;
+      if (numQuads > parameters.QUADS)
+        return true;
     }
     return false;
   }
-  return false;
-}
 
   // Returns true if LIC5 is true
   public boolean LIC5() {
@@ -152,7 +149,28 @@ public class Decide {
 
   // Returns true if LIC9 is true
   public boolean LIC9() {
-    return false;
+      double X1, X2, X3, Y1, Y2, Y3, angle;
+      //Constraint condition #1
+      if(!((parameters.C_PTS >= 1) && (parameters.D_PTS >= 1)))
+          return false;
+      //Constraint condition #2
+      if(!((parameters.C_PTS + parameters.D_PTS) <= (numpoints-3)))
+          return false;
+      //Constraint condition #3
+      if(numpoints < 5)
+          return false;
+      for(int i = 0; i < (numpoints - (parameters.C_PTS + parameters.D_PTS + 2)); i++) {
+          X1 = X[i];                                        Y1 = Y[i];
+          X2 = X[i+parameters.C_PTS+1];                     Y2 = Y[i+parameters.C_PTS+1];
+          X3 = X[i+parameters.C_PTS+parameters.D_PTS+2];    Y3 = Y[i+parameters.C_PTS+parameters.D_PTS+2];
+          //The first and last point should not coincide with the vertex (second point)
+          if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2)))
+              return false;
+          angle = calculateAngle(i, i+parameters.C_PTS+1, i+parameters.C_PTS+parameters.D_PTS+2);
+          if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
+              return true;
+      }
+      return false;
   }
 
   // Returns true if LIC10 is true
