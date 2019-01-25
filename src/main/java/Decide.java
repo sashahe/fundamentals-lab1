@@ -131,6 +131,24 @@ public class Decide {
 
   // Returns true if LIC12 is true
   public boolean LIC12() {
+    if (this.numpoints < 3)
+      return false;
+
+    boolean GT = false;
+    boolean LT = false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      if (GT && LT)
+        return true;
+
+      double distance = getDistanceBetween(i, i + this.parameters.K_PTS + 1);
+
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT)
+        GT = true;
+      if (doubleCompare(distance, this.parameters.LENGTH2) == COMPTYPE.LT)
+        LT = true;
+    }
+
     return false;
   }
 
