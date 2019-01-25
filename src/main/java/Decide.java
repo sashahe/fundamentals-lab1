@@ -33,7 +33,6 @@ public class Decide {
    * There exists at least one set of three consecutive data points 
    * that cannot all be contained within or on a circle of radius RADIUS1.
    * (0 ≤ RADIUS1)
-   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
   */
   public boolean LIC1() {
     if (this.numpoints < 3 || !(0 <= this.parameters.RADIUS1)) {
