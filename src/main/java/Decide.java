@@ -37,8 +37,21 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC1 is true
+  /*
+   * There exists at least one set of three consecutive data points 
+   * that cannot all be contained within or on a circle of radius RADIUS1.
+   * (0 ≤ RADIUS1)
+  */
   public boolean LIC1() {
+    if (this.numpoints < 3) { 
+      return false; 
+    }
+    for (int i = 0; i < this.numpoints - 2; i++) {
+      double radius = getRadiusOfCircleFrom3Points(i, i+1, i+2);
+      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT){
+        return true; 
+      }
+    }
     return false;
   }
 
@@ -128,7 +141,15 @@ public class Decide {
   }
 
   // Returns true if LIC5 is true
+  // There exists at least one set of two consecutive data points,
+  // (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
   public boolean LIC5() {
+    if (this.numpoints < 2)
+      return false;
+    for (int i = 0; i < this.numpoints - 1; i++) {
+      if (doubleCompare(X[i+1], X[i]) == COMPTYPE.LT)
+        return true;
+    }
     return false;
   }
 
@@ -148,6 +169,9 @@ public class Decide {
   }
 
   // Returns true if LIC9 is true
+  // There exists at least one set of three points separated by C_PTS and D_PTS 
+  // consecutive intervening, respectively, that form an angle such that angle < (PI - EPSILON1)
+  // or angle > (PI + EPSILON1)
   public boolean LIC9() {
       double X1, X2, X3, Y1, Y2, Y3, angle;
       //Constraint condition #1
@@ -205,8 +229,20 @@ public class Decide {
   }
 
   // Returns true if LIC14 is true
+  // LIC10 + In addition, there exist three data points (which can be the same or different
+  // from the three data points just mentioned) separated by exactly E PTS and F PTS
+  // consecutive intervening points, respectively, that are the vertices of a triangle
+  // with area less than AREA2. Both parts must be true for the LIC to be true.
+  // The condition is not met when NUMPOINTS < 5.
   public boolean LIC14() {
-    return false;
+    if (this.numpoints < 5 || !LIC10()) return false;
+      int e = this.parameters.E_PTS;
+      int f = this.parameters.F_PTS;
+      for (int i = 0; i < this.numpoints - (2 + e + f); i++) {
+        if (doubleCompare(getArea(i, i+e+1, i+e+1+f+1), this.parameters.AREA2) == COMPTYPE.LT)
+          return true;
+      }
+      return false;
   }
 
   // Set CMV[i] = true if LIC i == true
@@ -251,7 +287,7 @@ public class Decide {
     } else {
       System.out.println("no");
     }
-  };
+  }
 
   public Decide() {
     decide();
@@ -261,6 +297,7 @@ public class Decide {
     Decide decide = new Decide();
   }
 
+  /****** HELPER METHODS ******/
   private COMPTYPE doubleCompare(double a, double b) {
     if (Math.abs(a - b) < 0.000001)
       return COMPTYPE.EQ;
@@ -305,5 +342,32 @@ public class Decide {
     Bx = X[j]; By = Y[j];
     Cx = X[k]; Cy = Y[k];
     return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
+  }
+
+  /*
+   * Used in LIC1
+   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
+   */
+  private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {
+    double X1 = X[i], Y1 = Y[i];
+    double X2 = X[j], Y2 = Y[j];
+    double X3 = X[k], Y3 = Y[k];
+
+    double dividePart =  2 * ((X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2));
+    double x = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (Y2 - Y3) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (Y3 - Y1) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (Y1 - Y2);
+    x /= dividePart;
+
+    double y = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (X3 - X2) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
+    y /= dividePart;
+    
+    double radius = Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+    if (Double.isNaN(radius)) { return 0.0; }
+    return radius;
   }
 }
