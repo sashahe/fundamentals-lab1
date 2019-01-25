@@ -36,37 +36,12 @@ public class Decide {
    * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
   */
   public boolean LIC1() {
-    if (numpoints < 3 && 0 <= parameters.RADIUS1) {
+    if (this.numpoints < 3 || !(0 <= this.parameters.RADIUS1)) {
       return false;
     }
-
-    double X1, Y1, X2, Y2, X3, Y3;
-    for (int i = 0; i < numpoints - 2; i++) {
-      X1 = X[i];
-      Y1 = Y[i];
-      X2 = X[i + 1];
-      Y2 = Y[i + 1];
-      X3 = X[i + 2];
-      Y3 = Y[i + 2];
-
-      double dividePart =  2 * ((X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2));
-      double x = 
-      (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (Y2 - Y3) + 
-      (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (Y3 - Y1) + 
-      (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (Y1 - Y2);
-      x /= dividePart;
-
-      double y = 
-      (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (X3 - X2) + 
-      (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
-      (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
-      y /= dividePart;
-
-      double radius = Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
-
-      if (radius > parameters.RADIUS1) {
-        return true;
-      }
+    for (int i = 0; i < this.numpoints - 2; i++) {
+      double radius = getRadiusOfCircleFrom3Points(i, i+1, i+2);
+      if (radius >= this.parameters.RADIUS1) { return true; }
     }
     return false;
   }
@@ -208,4 +183,32 @@ public class Decide {
       return COMPTYPE.LT;
     return COMPTYPE.GT;
   }
+  
+  /****** HELPER METHODS ******/
+
+  /*
+   * Used in LIC1
+   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
+   */
+  private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {
+    double X1 = X[i], Y1 = Y[i];
+    double X2 = X[j], Y2 = Y[j];
+    double X3 = X[k], Y3 = Y[k];
+
+    double dividePart =  2 * ((X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2));
+    double x = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (Y2 - Y3) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (Y3 - Y1) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (Y1 - Y2);
+    x /= dividePart;
+
+    double y = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (X3 - X2) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
+    y /= dividePart;
+
+    return Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+  }
+
 } 
