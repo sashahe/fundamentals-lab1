@@ -49,7 +49,7 @@ public class Decide {
         if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
           return false;
         }
-        angle = calculateAngle(X1, X2, X3, Y1, Y2, Y3);
+        angle = calculateAngle(i, i+1, i+2);
         if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
           return true;
       }
@@ -197,18 +197,26 @@ public class Decide {
   }
 
   //Calculates the distance between two coordinates.
-  private double calculateDistance (double X1, double X2, double Y1, double Y2) {
-    double powA = Math.pow((X2 - X1), 2);
-    double powB = Math.pow((Y2 - Y1), 2);
-    double distance = Math.sqrt(powA + powB);
+  private double calculateDistance (int i, int j) {
+    double Ax, Bx, Ay, By;
+    Ax = X[i];	Ay = Y[i];
+    Bx = X[j];  By = Y[j];
+    double powX = Math.pow((Bx - Ax), 2);
+    double powY = Math.pow((By - Ay), 2);
+    double distance = Math.sqrt(powX + powY);
     return distance;
   }
 
   //Calculates the angle between three coordinates.
-  private double calculateAngle (double X1, double X2, double X3, double Y1, double Y2, double Y3) {
-    double A = calculateDistance(X1, X2, Y1, Y2);
-    double B = calculateDistance(X2, X3, Y2, Y3);
-    double C = calculateDistance(X3, X1, Y3, Y1);
+  private double calculateAngle (int i, int j, int k) {
+    double Ax, Bx, Cx, Ay, By, Cy;
+    Ax = X[i];	Ay = Y[i];
+    Bx = X[j];	By = Y[j];
+    Cx = X[k]; 	Cy = Y[k];
+
+    double A = calculateDistance(i, j);
+    double B = calculateDistance(j, k);
+    double C = calculateDistance(k, i);
     double sqrtA = Math.sqrt(A);
     double sqrtB = Math.sqrt(B);
     double sqrtC = Math.sqrt(C);
