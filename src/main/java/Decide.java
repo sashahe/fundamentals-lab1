@@ -25,7 +25,15 @@ public class Decide {
   };
 
   // Returns true if LIC0 is true
+  // There exists at least one set of two consecutive data points that are a distance greater than
+  // the length, LENGTH1, apart.
   public boolean LIC0() {
+    for (int i = 0; i < numpoints - 1; i++) {
+      double distance = calculateDistance(i, i + 1);
+
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT)
+        return true;
+    }
     return false;
   }
 
@@ -35,7 +43,25 @@ public class Decide {
   }
 
   // Returns true if LIC2 is true
+  //There exists at least one set of three consecutive data points
+  //that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
+    if((0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints)) {
+      double X1, X2, X3, Y1, Y2, Y3;
+      double angle;
+      for(int i = 0; i < numpoints - 2; i++) {
+        X1 = X[i];    Y1 = Y[i];
+        X2 = X[i+1];  Y2 = Y[i+1];
+        X3 = X[i+2];  Y3 = Y[i+2];
+        //The first and last point should not coincide with the vertex (second point)
+        if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
+          return false;
+        }
+        angle = calculateAngle(i, i+1, i+2);
+        if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
+          return true;
+      }
+    }
     return false;
   }
 
@@ -190,6 +216,36 @@ public class Decide {
     return COMPTYPE.GT;
   }
 
+  //Calculates the distance between two coordinates.
+  private double calculateDistance (int i, int j) {
+    double Ax, Bx, Ay, By;
+    Ax = X[i];	Ay = Y[i];
+    Bx = X[j];  By = Y[j];
+    double powX = Math.pow((Bx - Ax), 2);
+    double powY = Math.pow((By - Ay), 2);
+    double distance = Math.sqrt(powX + powY);
+    return distance;
+  }
+
+  //Calculates the angle between three coordinates.
+  private double calculateAngle (int i, int j, int k) {
+    double Ax, Bx, Cx, Ay, By, Cy;
+    Ax = X[i];	Ay = Y[i];
+    Bx = X[j];	By = Y[j];
+    Cx = X[k]; 	Cy = Y[k];
+
+    double A = calculateDistance(i, j);
+    double B = calculateDistance(j, k);
+    double C = calculateDistance(k, i);
+    double sqrtA = Math.sqrt(A);
+    double sqrtB = Math.sqrt(B);
+    double sqrtC = Math.sqrt(C);
+    double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
+    double denominator = 2*A*B;
+    double angle =  Math.acos(numerator/denominator);
+    return angle;
+  }
+
   private double getArea(int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i]; Ay = Y[i];
@@ -198,3 +254,4 @@ public class Decide {
     return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
   }
 } 
+
