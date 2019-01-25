@@ -37,8 +37,21 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC1 is true
+  /*
+   * There exists at least one set of three consecutive data points 
+   * that cannot all be contained within or on a circle of radius RADIUS1.
+   * (0 ≤ RADIUS1)
+  */
   public boolean LIC1() {
+    if (this.numpoints < 3) { 
+      return false; 
+    }
+    for (int i = 0; i < this.numpoints - 2; i++) {
+      double radius = getRadiusOfCircleFrom3Points(i, i+1, i+2);
+      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT){
+        return true; 
+      }
+    }
     return false;
   }
 
@@ -79,12 +92,65 @@ public class Decide {
   }
 
   // Returns true if LIC4 is true
+  // There exists at least one set of Q_PTS data points
+  // that lie in more than QUADS quadrants.
   public boolean LIC4() {
-    return false;
+    boolean quad1, quad2, quad3, quad4;
+    quad1 = quad2 = quad3 = quad4 = false;
+    int numQuads = 0;
+    //Check constraint condition #1
+    if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
+      //Check constraint condition #2
+      if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
+      for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+        for(int j = 0; j < parameters.Q_PTS; j++) {
+          //Check if the point is in quadrant number 1
+          if((X[i+j] >= 0) && (Y[i+j] >= 0)) {
+            if(!quad1) {
+              numQuads++;
+              quad1 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 2
+          if ((X[i+j] <= 0) && (Y[i+j] >= 0)) {
+            if(!quad2) {
+              numQuads++;
+              quad2 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 3
+          if ((X[i+j] <= 0) && (Y[i+j] <= 0)) {
+            if(!quad3) {
+              numQuads++;
+              quad3 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 4
+          if ((X[i+j] >= 0) && (Y[i+j] <= 0)) {
+            if(!quad4) {
+              numQuads++;
+              quad4 = true;
+            }
+          }
+        }
+        if(numQuads > parameters.QUADS)
+          return true;
+      }
+    }
   }
+  return false;
+}
 
   // Returns true if LIC5 is true
+  // There exists at least one set of two consecutive data points,
+  // (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
   public boolean LIC5() {
+    if (this.numpoints < 2)
+      return false;
+    for (int i = 0; i < this.numpoints - 1; i++) {
+      if (doubleCompare(X[i+1], X[i]) == COMPTYPE.LT)
+        return true;
+    }
     return false;
   }
 
@@ -94,7 +160,19 @@ public class Decide {
   }
 
   // Returns true if LIC7 is true
+  // There exists at least one set of two data points separated by exactly K PTS consecutive intervening
+  // points that are a distance greater than the length, LENGTH1, apart. The condition
+  // is not met when NUMPOINTS < 3.
   public boolean LIC7() {
+    if (this.numpoints < 3)
+      return false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      double distance = calculateDistance(i, i + this.parameters.K_PTS + 1);
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -109,8 +187,8 @@ public class Decide {
   }
 
   // Returns true if LIC10 is true
-  //There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
-  //intervening points, respectively, that are the vertices of a triangle with area greater
+  // There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
+  // intervening points, respectively, that are the vertices of a triangle with area greater
   // than AREA1. The condition is not met when NUMPOINTS < 5.
   public boolean LIC10() {
     if (this.numpoints < 5)
@@ -163,8 +241,20 @@ public class Decide {
   }
 
   // Returns true if LIC14 is true
+  // LIC10 + In addition, there exist three data points (which can be the same or different
+  // from the three data points just mentioned) separated by exactly E PTS and F PTS
+  // consecutive intervening points, respectively, that are the vertices of a triangle
+  // with area less than AREA2. Both parts must be true for the LIC to be true.
+  // The condition is not met when NUMPOINTS < 5.
   public boolean LIC14() {
-    return false;
+    if (this.numpoints < 5 || !LIC10()) return false;
+      int e = this.parameters.E_PTS;
+      int f = this.parameters.F_PTS;
+      for (int i = 0; i < this.numpoints - (2 + e + f); i++) {
+        if (doubleCompare(getArea(i, i+e+1, i+e+1+f+1), this.parameters.AREA2) == COMPTYPE.LT)
+          return true;
+      }
+      return false;
   }
 
   // Set CMV[i] = true if LIC i == true
@@ -209,7 +299,7 @@ public class Decide {
     } else {
       System.out.println("no");
     }
-  };
+  }
 
   public Decide() {
     decide();
@@ -217,8 +307,9 @@ public class Decide {
 
   public static void main(String args[]) {
     Decide decide = new Decide();
-    }
+  }
 
+  /****** HELPER METHODS ******/
   private COMPTYPE doubleCompare(double a, double b) {
     if (Math.abs(a - b) < 0.000001)
       return COMPTYPE.EQ;
@@ -264,5 +355,31 @@ public class Decide {
     Cx = X[k]; Cy = Y[k];
     return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
   }
-} 
 
+  /*
+   * Used in LIC1
+   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
+   */
+  private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {
+    double X1 = X[i], Y1 = Y[i];
+    double X2 = X[j], Y2 = Y[j];
+    double X3 = X[k], Y3 = Y[k];
+
+    double dividePart =  2 * ((X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2));
+    double x = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (Y2 - Y3) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (Y3 - Y1) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (Y1 - Y2);
+    x /= dividePart;
+
+    double y = 
+    (Math.pow(X1, 2) + Math.pow(Y1, 2)) * (X3 - X2) + 
+    (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
+    (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
+    y /= dividePart;
+    
+    double radius = Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+    if (Double.isNaN(radius)) { return 0.0; }
+    return radius;
+  }
+}
