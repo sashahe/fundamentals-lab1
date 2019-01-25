@@ -136,4 +136,40 @@ public class DecideTest {
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC10());
   }
+
+  @Test
+  public void testLIC12() {
+    Decide decide = new Decide();
+
+    // No input points
+    assertFalse(decide.LIC12());
+
+    // Testing two points with a distance of sqrt(2).
+    decide.numpoints = 2;
+    decide.parameters.LENGTH1 = 3;
+    decide.parameters.LENGTH2 = 10;
+    decide.parameters.K_PTS = 1;
+
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+
+    decide.X[1] = 1;
+    decide.Y[1] = 1;
+
+    // Two data points shouldn't be enough
+    assertFalse(decide.LIC12());
+
+    decide.numpoints = 3;
+
+    decide.X[2] = 2;
+    decide.Y[2] = 2;
+
+    // Should be false because both conditions must hold
+    assertFalse(decide.LIC12());
+
+    decide.parameters.LENGTH1 = 2;
+
+    // Should be true now that both conditions hold
+    assertTrue(decide.LIC12());
+  }
 }
