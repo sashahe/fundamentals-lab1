@@ -3,6 +3,49 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DecideTest {
+
+  @Test
+  public void testLIC0() {
+    Decide decide = new Decide();
+    
+    // No input points should be false
+    assertFalse(decide.LIC0());
+
+    // Testing two points with a distance of sqrt(2).
+    decide.numpoints = 2;
+
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+
+    decide.X[1] = 1;
+    decide.Y[1] = 1;
+
+    // Should be true because sqrt(2) > 1
+    decide.parameters.LENGTH1 = 1;
+    assertTrue(decide.LIC0());
+
+    // Should be false because sqrt(2) < 2
+    decide.parameters.LENGTH1 = 2;
+    assertFalse(decide.LIC0());
+
+    // Adding another point
+    decide.numpoints = 3;
+    decide.X[2] = 3;
+    decide.Y[2] = 1;
+
+    // Should be false because the distance is equal to 2 but not greater than 2
+    decide.parameters.LENGTH1 = 2;
+    assertFalse(decide.LIC0());
+
+    // But now that we add a consecutive point with a distance of 3...
+    decide.numpoints = 4;
+    decide.X[2] = 6;
+    decide.Y[2] = 1;
+
+    // ...it should be true!
+    assertTrue(decide.LIC0());
+  }
+
   @Test
   public void testLIC2() {
     Decide decide = new Decide();
