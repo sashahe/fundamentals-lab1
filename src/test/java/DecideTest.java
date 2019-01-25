@@ -48,7 +48,7 @@ public class DecideTest {
     assertTrue(decide.LIC2());
   }
 
-  @ Test
+  @Test
   public void testLIC3() {
     Decide decide = new Decide();
 
@@ -104,9 +104,15 @@ public class DecideTest {
     decide.X[2] = -1; decide.Y[2] = -1;
     decide.X[3] = 5;  decide.Y[3] = 0;
     assertTrue(decide.LIC4());
-  }
-}
 
+    decide.X[0] = 1;  decide.Y[0] = 1;
+    decide.X[1] = 2;  decide.Y[1] = 3;
+    decide.X[2] = 1;  decide.Y[2] = 1;
+    decide.X[3] = 5;  decide.Y[3] = 0;
+    assertFalse(decide.LIC4());
+  }
+
+  @Test
   public void testLIC10(){
     Decide decide = new Decide();
     // No points

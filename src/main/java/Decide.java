@@ -77,7 +77,9 @@ public class Decide {
     boolean quad1, quad2, quad3, quad4;
     quad1 = quad2 = quad3 = quad4 = false;
     int numQuads = 0;
+    //Check constraint condition #1
     if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
+      //Check constraint condition #2
       if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
       for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
         for(int j = 0; j < parameters.Q_PTS; j++) {
@@ -112,8 +114,6 @@ public class Decide {
         }
         if(numQuads > parameters.QUADS)
           return true;
-        else
-          return false;
       }
       return false;
     }
