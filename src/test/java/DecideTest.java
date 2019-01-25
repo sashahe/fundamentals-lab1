@@ -156,32 +156,73 @@ public class DecideTest {
     decide.parameters.Q_PTS = 1;
     decide.parameters.QUADS = 1;
     decide.numpoints = 1;
-    decide.X[0] = 1;  decide.Y[0] = 1;
+    decide.X[0] = 1;
+    decide.Y[0] = 1;
     assertFalse(decide.LIC4());
 
     //Test with three points
     decide.parameters.Q_PTS = 3;
     decide.parameters.QUADS = 3;
     decide.numpoints = 3;
-    decide.X[0] = 1;  decide.Y[0] = 1;
-    decide.X[1] = -1; decide.Y[1] = 1;
-    decide.X[2] = -1; decide.Y[2] = -1;
+    decide.X[0] = 1;
+    decide.Y[0] = 1;
+    decide.X[1] = -1;
+    decide.Y[1] = 1;
+    decide.X[2] = -1;
+    decide.Y[2] = -1;
     assertFalse(decide.LIC4());
 
     //Test with four points
     decide.parameters.QUADS = 2;
     decide.numpoints = 4;
-    decide.X[0] = 1;  decide.Y[0] = 1;
-    decide.X[1] = -2; decide.Y[1] = 3;
-    decide.X[2] = -1; decide.Y[2] = -1;
-    decide.X[3] = 5;  decide.Y[3] = 0;
+    decide.X[0] = 1;
+    decide.Y[0] = 1;
+    decide.X[1] = -2;
+    decide.Y[1] = 3;
+    decide.X[2] = -1;
+    decide.Y[2] = -1;
+    decide.X[3] = 5;
+    decide.Y[3] = 0;
     assertTrue(decide.LIC4());
 
-    decide.X[0] = 1;  decide.Y[0] = 1;
-    decide.X[1] = 2;  decide.Y[1] = 3;
-    decide.X[2] = 1;  decide.Y[2] = 1;
-    decide.X[3] = 5;  decide.Y[3] = 0;
+    decide.X[0] = 1;
+    decide.Y[0] = 1;
+    decide.X[1] = 2;
+    decide.Y[1] = 3;
+    decide.X[2] = 1;
+    decide.Y[2] = 1;
+    decide.X[3] = 5;
+    decide.Y[3] = 0;
     assertFalse(decide.LIC4());
+  }
+
+  public void testLIC5() {
+    Decide decide = new Decide();
+
+    // No input points should return false
+    assertFalse(decide.LIC5());
+
+    // X[i+1] - X[i] > 0: LIC5 should return false
+    decide.numpoints = 2;
+    decide.X[0] = 0; decide.X[1] = 1;
+    decide.Y[0] = 0; decide.Y[1] = 1;
+    assertFalse(decide.LIC5());
+
+    // X[i+1] - X[i] = 0: LIC5 should return false
+    decide.X[0] = 1; decide.X[1] = 1;
+    decide.Y[0] = 1; decide.Y[1] = 1;
+    assertFalse(decide.LIC5());
+
+    // X[i+1] - X[i] < 0: LIC5 should return true
+    decide.X[0] = 1; decide.X[1] = 0;
+    decide.Y[0] = 0; decide.Y[1] = 1;
+    assertTrue(decide.LIC5());
+
+    // Any consecutive points should work
+    decide.numpoints = 4;
+    decide.X[0] = 1; decide.X[1] = 2; decide.X[2] = 3; decide.X[3] = 0;
+    decide.Y[0] = 0; decide.Y[1] = 1; decide.Y[2] = 1; decide.Y[3] = 0;
+    assertTrue(decide.LIC5());
   }
 
   @Test
@@ -218,35 +259,6 @@ public class DecideTest {
 
     decide.numpoints = 4;
     assertFalse(decide.LIC9());
-  }
-
-  public void testLIC5() {
-    Decide decide = new Decide();
-
-    // No input points should return false
-    assertFalse(decide.LIC5());
-
-    // X[i+1] - X[i] > 0: LIC5 should return false
-    decide.numpoints = 2;
-    decide.X[0] = 0; decide.X[1] = 1;
-    decide.Y[0] = 0; decide.Y[1] = 1;
-    assertFalse(decide.LIC5());
-
-    // X[i+1] - X[i] = 0: LIC5 should return false
-    decide.X[0] = 1; decide.X[1] = 1;
-    decide.Y[0] = 1; decide.Y[1] = 1;
-    assertFalse(decide.LIC5());
-
-    // X[i+1] - X[i] < 0: LIC5 should return true
-    decide.X[0] = 1; decide.X[1] = 0;
-    decide.Y[0] = 0; decide.Y[1] = 1;
-    assertTrue(decide.LIC5());
-
-    // Any consecutive points should work
-    decide.numpoints = 4;
-    decide.X[0] = 1; decide.X[1] = 2; decide.X[2] = 3; decide.X[3] = 0;
-    decide.Y[0] = 0; decide.Y[1] = 1; decide.Y[2] = 1; decide.Y[3] = 0;
-    assertTrue(decide.LIC5());
   }
 
   @Test

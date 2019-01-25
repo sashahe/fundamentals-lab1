@@ -306,7 +306,7 @@ public class Decide {
     return COMPTYPE.GT;
   }
 
-  //Calculates the distance between two coordinates.
+  //Calculates the distance between two points.
   private double calculateDistance (int i, int j) {
     double Ax, Bx, Ay, By;
     Ax = X[i];	Ay = Y[i];
@@ -317,7 +317,11 @@ public class Decide {
     return distance;
   }
 
-  //Calculates the angle between three coordinates.
+  /*
+   * Calculates the angle between three points.
+   * The second point out of the given three points
+   * is always the vertex of the angle.
+   */
   private double calculateAngle (int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];	Ay = Y[i];
