@@ -123,9 +123,7 @@ public class Decide {
         if(numQuads > parameters.QUADS)
           return true;
       }
-      return false;
     }
-    return false;
   }
   return false;
 }
