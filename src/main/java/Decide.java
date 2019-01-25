@@ -121,8 +121,8 @@ public class Decide {
   }
 
   // Returns true if LIC10 is true
-  //There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
-  //intervening points, respectively, that are the vertices of a triangle with area greater
+  // There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
+  // intervening points, respectively, that are the vertices of a triangle with area greater
   // than AREA1. The condition is not met when NUMPOINTS < 5.
   public boolean LIC10() {
     if (this.numpoints < 5)
