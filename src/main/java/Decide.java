@@ -35,12 +35,14 @@ public class Decide {
    * (0 ≤ RADIUS1)
   */
   public boolean LIC1() {
-    if (this.numpoints < 3 || !(0 <= this.parameters.RADIUS1)) {
-      return false;
+    if (this.numpoints < 3) { 
+      return false; 
     }
     for (int i = 0; i < this.numpoints - 2; i++) {
       double radius = getRadiusOfCircleFrom3Points(i, i+1, i+2);
-      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT ) { return true; }
+      if (!(doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.LT)){
+        return true; 
+      }
     }
     return false;
   }
@@ -179,8 +181,9 @@ public class Decide {
 
   public static void main(String args[]) {
     Decide decide = new Decide();
-    }
+  }
 
+  /****** HELPER METHODS ******/
   private COMPTYPE doubleCompare(double a, double b) {
     if (Math.abs(a - b) < 0.000001)
       return COMPTYPE.EQ;
@@ -188,9 +191,14 @@ public class Decide {
       return COMPTYPE.LT;
     return COMPTYPE.GT;
   }
-<<<<<<< HEAD
-  
-  /****** HELPER METHODS ******/
+
+  private double getArea(int i, int j, int k) {
+    double Ax, Bx, Cx, Ay, By, Cy;
+    Ax = X[i]; Ay = Y[i];
+    Bx = X[j]; By = Y[j];
+    Cx = X[k]; Cy = Y[k];
+    return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
+  }
 
   /*
    * Used in LIC1
@@ -213,18 +221,9 @@ public class Decide {
     (Math.pow(X2, 2) + Math.pow(Y2, 2)) * (X1 - X3) + 
     (Math.pow(X3, 2) + Math.pow(Y3, 2)) * (X2 - X1);
     y /= dividePart;
-
-    return Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+    
+    double radius = Math.sqrt(Math.pow((x - X1), 2) + Math.pow((y - Y1), 2));
+    if (Double.isNaN(radius)) { return 0.0; }
+    return radius;
   }
-
-=======
-
-  private double getArea(int i, int j, int k) {
-    double Ax, Bx, Cx, Ay, By, Cy;
-    Ax = X[i]; Ay = Y[i];
-    Bx = X[j]; By = Y[j];
-    Cx = X[k]; Cy = Y[k];
-    return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
-  }
->>>>>>> master
 } 
