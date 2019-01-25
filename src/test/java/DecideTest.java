@@ -61,9 +61,13 @@ public class DecideTest {
     d.Y[0] = 1; d.Y[1] = 1; d.Y[2] = 1;
     assertFalse(d.LIC1());  
 
-    // Test valid input
+    // Test valid input with radius bigger than 1
     d.X[0] = -1; d.X[1] = 0; d.X[2] = 1;
     d.Y[0] = 0;  d.Y[1] = 0; d.Y[2] = 1;
+    assertTrue(d.LIC1());
+
+    // ... and lets assume it is on the line
+    d.parameters.RADIUS1 = 1.58;
     assertTrue(d.LIC1());
 
     // Test invalid input
