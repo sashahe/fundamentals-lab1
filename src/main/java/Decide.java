@@ -25,7 +25,16 @@ public class Decide {
   };
 
   // Returns true if LIC0 is true
+  // There exists at least one set of two consecutive data points that are a distance greater than
+  // the length, LENGTH1, apart.
   public boolean LIC0() {
+    double Ax, Ay, Bx, By;
+    for (int i = 0; i < numpoints - 1; i++) {
+      double distance = calculateDistance(i, i + 1);
+
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT)
+        return true;
+    }
     return false;
   }
 
