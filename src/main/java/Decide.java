@@ -76,9 +76,56 @@ public class Decide {
   }
 
   // Returns true if LIC4 is true
+  // There exists at least one set of Q_PTS data points
+  // that lie in more than QUADS quadrants.
   public boolean LIC4() {
+    boolean quad1, quad2, quad3, quad4;
+    quad1 = quad2 = quad3 = quad4 = false;
+    int numQuads = 0;
+    if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
+      if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
+      for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+        for(int j = 0; j < parameters.Q_PTS; j++) {
+          //Check if the point is in quadrant number 1
+          if((X[i+j] >= 0) && (Y[i+j] >= 0)) {
+            if(!quad1) {
+              numQuads++;
+              quad1 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 2
+          if ((X[i+j] <= 0) && (Y[i+j] >= 0)) {
+            if(!quad2) {
+              numQuads++;
+              quad2 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 3
+          if ((X[i+j] <= 0) && (Y[i+j] <= 0)) {
+            if(!quad3) {
+              numQuads++;
+              quad3 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 4
+          if ((X[i+j] >= 0) && (Y[i+j] <= 0)) {
+            if(!quad4) {
+              numQuads++;
+              quad4 = true;
+            }
+          }
+        }
+        if(numQuads > parameters.QUADS)
+          return true;
+        else
+          return false;
+      }
+      return false;
+    }
     return false;
   }
+  return false;
+}
 
   // Returns true if LIC5 is true
   public boolean LIC5() {

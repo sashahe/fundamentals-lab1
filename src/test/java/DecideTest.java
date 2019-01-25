@@ -72,4 +72,37 @@ public class DecideTest {
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC3());
   }
+
+  @Test
+  public void testLIC4() {
+    Decide decide = new Decide();
+
+    //No input points
+    assertFalse(decide.LIC4());
+
+    //Test with one point
+    decide.parameters.Q_PTS = 1;
+    decide.parameters.QUADS = 1;
+    decide.numpoints = 1;
+    decide.X[0] = 1;  decide.Y[0] = 1;
+    assertFalse(decide.LIC4());
+
+    //Test with three points
+    decide.parameters.Q_PTS = 3;
+    decide.parameters.QUADS = 3;
+    decide.numpoints = 3;
+    decide.X[0] = 1;  decide.Y[0] = 1;
+    decide.X[1] = -1; decide.Y[1] = 1;
+    decide.X[2] = -1; decide.Y[2] = -1;
+    assertFalse(decide.LIC4());
+
+    //Test with four points
+    decide.parameters.QUADS = 2;
+    decide.numpoints = 4;
+    decide.X[0] = 1;  decide.Y[0] = 1;
+    decide.X[1] = -2; decide.Y[1] = 3;
+    decide.X[2] = -1; decide.Y[2] = -1;
+    decide.X[3] = 5;  decide.Y[3] = 0;
+    assertTrue(decide.LIC4());
+  }
 }
