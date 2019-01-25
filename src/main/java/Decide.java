@@ -97,7 +97,15 @@ public class Decide {
   }
 
   // Returns true if LIC5 is true
+  // There exists at least one set of two consecutive data points,
+  // (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
   public boolean LIC5() {
+    if (this.numpoints < 2)
+      return false;
+    for (int i = 0; i < this.numpoints - 1; i++) {
+      if (doubleCompare(X[i+1], X[i]) == COMPTYPE.LT)
+        return true;
+    }
     return false;
   }
 
