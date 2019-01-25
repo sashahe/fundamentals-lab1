@@ -36,6 +36,16 @@ public class DecideTest {
     decide.X[2] = 2; decide.Y[2] = 3;
     decide.X[3] = 4; decide.Y[3] = 4;
     assertTrue(decide.LIC2());
+
+    decide.parameters.EPSILON1 = 0;
+    decide.X[0] = 1.24; decide.Y[0] = 2.56;
+    decide.X[1] = 2.01; decide.Y[1] = 2.10;
+    decide.X[2] = 2.389; decide.Y[2] = 3.2123;
+    decide.X[3] = 4.456; decide.Y[3] = 5.7960;
+    assertTrue(decide.LIC2());
+
+    decide.parameters.EPSILON1 = 1.5;
+    assertTrue(decide.LIC2());
   }
 
   @ Test

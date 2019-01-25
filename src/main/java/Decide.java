@@ -24,31 +24,6 @@ public class Decide {
     LT, EQ, GT
   };
 
-/*****************Additional Math Functions********************/
-  //Calculates the distance between two coordinates.
-  public double calculateDistance (double X1, double X2, double Y1, double Y2) {
-    double powA = Math.pow((X2 - X1), 2);
-    double powB = Math.pow((Y2 - Y1), 2);
-    double distance = Math.sqrt(powA + powB);
-    return distance;
-  }
-
-  //Calculates the angle between three coordinates.
-  public double calculateAngle (double X1, double X2, double X3, double Y1, double Y2, double Y3) {
-    double A = calculateDistance(X1, X2, Y1, Y2);
-    double B = calculateDistance(X2, X3, Y2, Y3);
-    double C = calculateDistance(X3, X1, Y3, Y1);
-    double sqrtA = Math.sqrt(A);
-    double sqrtB = Math.sqrt(B);
-    double sqrtC = Math.sqrt(C);
-    double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
-    double denominator = 2*A*B;
-    double angle =  Math.acos(numerator/denominator);
-    return angle;
-  }
-  /*************************************************************/
-
-
   // Returns true if LIC0 is true
   public boolean LIC0() {
     return false;
@@ -63,21 +38,20 @@ public class Decide {
   //There exists at least one set of three consecutive data points
   //that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
-    if((0 <= parameters.EPSILON1) & (parameters.EPSILON1 < PI) & (3 <= numpoints)) {
+    if((0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints)) {
       double X1, X2, X3, Y1, Y2, Y3;
       double angle;
       for(int i = 0; i < numpoints - 2; i++) {
         X1 = X[i];    Y1 = Y[i];
         X2 = X[i+1];  Y2 = Y[i+1];
         X3 = X[i+2];  Y3 = Y[i+2];
-        if(((X1 == X2) & (Y1 == Y2)) | ((X3 == X2) & (Y3 == Y2))) {
+        //The first and last point should not coincide with the vertex (second point)
+        if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
           return false;
-        } else {
-          angle = calculateAngle(X1, X2, X3, Y1, Y2, Y3);
-          if((angle > (PI + parameters.EPSILON1) | (angle < (PI - parameters.EPSILON1)))) {
-            return true;
-          }
         }
+        angle = calculateAngle(X1, X2, X3, Y1, Y2, Y3);
+        if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
+          return true;
       }
     }
     return false;
@@ -215,4 +189,30 @@ public class Decide {
       return COMPTYPE.LT;
     return COMPTYPE.GT;
   }
+
+  /*****************Additional Math Functions********************/
+  //Calculates the distance between two coordinates.
+  private double calculateDistance (double X1, double X2, double Y1, double Y2) {
+    double powA = Math.pow((X2 - X1), 2);
+    double powB = Math.pow((Y2 - Y1), 2);
+    double distance = Math.sqrt(powA + powB);
+    return distance;
+  }
+
+  //Calculates the angle between three coordinates.
+  private double calculateAngle (double X1, double X2, double X3, double Y1, double Y2, double Y3) {
+    double A = calculateDistance(X1, X2, Y1, Y2);
+    double B = calculateDistance(X2, X3, Y2, Y3);
+    double C = calculateDistance(X3, X1, Y3, Y1);
+    double sqrtA = Math.sqrt(A);
+    double sqrtB = Math.sqrt(B);
+    double sqrtC = Math.sqrt(C);
+    double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
+    double denominator = 2*A*B;
+    double angle =  Math.acos(numerator/denominator);
+    return angle;
+  }
+  /*************************************************************/
+
+
 } 
