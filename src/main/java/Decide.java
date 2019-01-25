@@ -86,7 +86,19 @@ public class Decide {
   }
 
   // Returns true if LIC7 is true
+  // There exists at least one set of two data points separated by exactly K PTS consecutive intervening
+  // points that are a distance greater than the length, LENGTH1, apart. The condition
+  // is not met when NUMPOINTS < 3.
   public boolean LIC7() {
+    if (this.numpoints < 3)
+      return false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      double distance = calculateDistance(i, i + this.parameters.K_PTS + 1);
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT) {
+        return true;
+      }
+    }
     return false;
   }
 
