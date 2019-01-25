@@ -48,7 +48,7 @@ public class Decide {
     }
     for (int i = 0; i < this.numpoints - 2; i++) {
       double radius = getRadiusOfCircleFrom3Points(i, i+1, i+2);
-      if (!(doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.LT)){
+      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT){
         return true; 
       }
     }

@@ -67,8 +67,8 @@ public class DecideTest {
     assertTrue(d.LIC1());
 
     // ... and lets assume it is on the line
-    d.parameters.RADIUS1 = 1.58;
-    assertTrue(d.LIC1());
+    d.parameters.RADIUS1 = 1.581139;
+    assertFalse(d.LIC1());
 
     // Test invalid input
     d.X[0] = -0.5; d.X[1] = 0; d.X[2] = 0.25;
