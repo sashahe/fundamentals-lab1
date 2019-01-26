@@ -387,7 +387,7 @@ public class DecideTest {
     decide.numpoints = 5;
 
     // Area of point 0, 2, 4 is 0.5
-    decide.X[0] = 0 ;
+    decide.X[0] = 0;
     decide.Y[0] = 0;
     decide.X[1] = 1;
     decide.Y[1] = 1;

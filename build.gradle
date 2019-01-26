@@ -35,4 +35,12 @@ googleJavaFormat {
 task format(type: GoogleJavaFormat) {}
 task verifyFormatting(type: VerifyGoogleJavaFormat) {}
 
-build.dependsOn format
+task installGitHooks(type: Copy) {
+  from new File(rootProject.rootDir, 'config/hooks/pre-commit')
+  into { new File(rootProject.rootDir, '.git/hooks') }
+  fileMode 0777
+}
+
+build.dependsOn installGitHooks
+
+// build.dependsOn format

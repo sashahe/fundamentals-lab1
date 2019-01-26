@@ -1,12 +1,19 @@
 #!/bin/sh
+# From gist at https://gist.github.com/chadmaughan/5889802
 
-set -e
+# stash any unstaged changes
+git stash -q --keep-index
 
-REPO_ROOT_DIR="$(git rev-parse --show-toplevel)"
+./gradlew verifyFormatting
 
-files=$((git diff --cached --name-only --diff-filter=ACMR | grep -Ei "\.java$") || true)
-if [ ! -z "${files}" ]; then
-    comma_files=$(echo "$files" | paste -s -d "," -)
-    "${REPO_ROOT_DIR}/gradlew" goJF -DgoogleJavaFormat.include="$comma_files" &>/dev/null
-    git add $(echo "$files" | paste -s -d " " -)
-fi
+# run the tests with the gradle wrapper
+./gradlew test
+
+# store the last exit code in a variable
+RESULT=$?
+
+# unstash the unstashed changes
+git stash pop -q
+
+# return the './gradlew test' exit code
+exit $RESULT
