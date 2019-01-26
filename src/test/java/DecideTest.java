@@ -342,4 +342,58 @@ public class DecideTest {
     decide.parameters.AREA2 = 0.51;
     assertTrue(decide.LIC14());
   }
+
+  @Test
+  public void testCalculatePUM() {
+    Decide decide = new Decide();
+    decide.CMV[3] = true;
+
+    // Test a requirement where only LIC3 must be true
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        if (i  == 3 || j == 3) {
+          decide.LCM[i][j] = Decide.CONNECTORS.ORR;
+        } else {
+          decide.LCM[i][j] = Decide.CONNECTORS.NOTUSED;
+        }
+      }
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Test a requirement where all conditions must be true
+    for (int i = 0; i < 15; i++) {
+      decide.CMV[i] = true;
+      for (int j =0; j < 15; j++) {
+        decide.LCM[i][j] = Decide.CONNECTORS.ANDD;
+      }
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Setting all conditions to false
+    for (int i = 0; i < 15; i++) {
+       decide.CMV[i] = false;
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertFalse(decide.PUM[i][j]);
+      }
+    }
+  }
 }

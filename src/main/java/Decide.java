@@ -5,7 +5,7 @@ public class Decide {
   public double[] X = new double[100];
   public double[] Y = new double[100];
   public int numpoints = 0;
-  public CONNECTORS[][] LICM = new CONNECTORS[15][15];
+  public CONNECTORS[][] LCM = new CONNECTORS[15][15];
   public boolean[] PUV = new boolean[15];
 
   public boolean[] CMV = new boolean[15];
@@ -16,7 +16,7 @@ public class Decide {
 
   private static final double PI = 3.1415926535;
 
-  private enum CONNECTORS {
+  public enum CONNECTORS {
     NOTUSED, ORR, ANDD
   };
 
@@ -276,8 +276,24 @@ public class Decide {
     CMV[14] = LIC14();
   };
 
+  // The entries in the LCM represent the logical connectors to be used
+  // between pairs of LICs to determine the corresponding entry in the PUMe.
+  // LCM[i,j] represents the boolean operator to be applied to CMV[i] and CMV[j].
+  // PUM[i,j] is set according to the result of this operation
   public void calculatePUM() {
-    // Matrix operations between CMV and LICM to get PUM
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        if (this.LCM[i][j] == CONNECTORS.NOTUSED) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ORR && (this.CMV[i] || this.CMV[j])) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ANDD && this.CMV[i] && this.CMV[j]) {
+          this.PUM[i][j] = true;
+        } else {
+          this.PUM[i][j] = false;
+        }
+      }
+    }
   }
 
   public void calculateFUV() {
