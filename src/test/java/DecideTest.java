@@ -47,32 +47,32 @@ public class DecideTest {
 
   @ Test
   public void testLIC1() {
-    Decide d = new Decide();
+    Decide decide = new Decide();
     
     // No input points
-    assertFalse(d.LIC1());
+    assertFalse(decide.LIC1());
 
-    d.parameters.RADIUS1 = 1;
-    d.numpoints = 3;
+    decide.parameters.RADIUS1 = 1;
+    decide.numpoints = 3;
 
     // Test with three points that are all the same
-    d.X[0] = 1; d.X[1] = 1; d.X[2] = 1;
-    d.Y[0] = 1; d.Y[1] = 1; d.Y[2] = 1;
-    assertFalse(d.LIC1());  
+    decide.X[0] = 1; decide.X[1] = 1; decide.X[2] = 1;
+    decide.Y[0] = 1; decide.Y[1] = 1; decide.Y[2] = 1;
+    assertFalse(decide.LIC1());  
 
     // Test valid input with radius bigger than 1
-    d.X[0] = -1; d.X[1] = 0; d.X[2] = 1;
-    d.Y[0] = 0;  d.Y[1] = 0; d.Y[2] = 1;
-    assertTrue(d.LIC1());
+    decide.X[0] = -1; decide.X[1] = 0; decide.X[2] = 1;
+    decide.Y[0] = 0;  decide.Y[1] = 0; decide.Y[2] = 1;
+    assertTrue(decide.LIC1());
 
     // ... and lets assume it is on the line
-    d.parameters.RADIUS1 = 1.581139;
-    assertFalse(d.LIC1());
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
 
     // Test invalid input
-    d.X[0] = -0.5; d.X[1] = 0; d.X[2] = 0.25;
-    d.Y[0] = 0;    d.Y[1] = 0; d.Y[2] = 0.25;
-    assertFalse(d.LIC1());
+    decide.X[0] = -0.5; decide.X[1] = 0; decide.X[2] = 0.25;
+    decide.Y[0] = 0;    decide.Y[1] = 0; decide.Y[2] = 0.25;
+    assertFalse(decide.LIC1());
   }
 
   @Test
@@ -264,32 +264,32 @@ public class DecideTest {
 
   @Test
   public void testLIC8() {
-    Decide d = new Decide();
+    Decide decide = new Decide();
 
     // No points
-    assertFalse(d.LIC8());
+    assertFalse(decide.LIC8());
 
-    d.parameters.RADIUS1 = 1;
-    d.parameters.A_PTS = 1;
-    d.parameters.B_PTS = 1;
+    decide.parameters.RADIUS1 = 1;
+    decide.parameters.A_PTS = 1;
+    decide.parameters.B_PTS = 1;
     
     // All points are the same and at origin
-    d.numpoints = 5;
-    assertFalse(d.LIC8());
+    decide.numpoints = 5;
+    assertFalse(decide.LIC8());
 
     // Test valid input with radius bigger than 1
-    d.X[0] = 0; d.X[1] = 0; d.X[2] = 1; d.X[3] = 0; d.X[4] = 0;
-    d.Y[0] = 0; d.Y[1] = 0; d.Y[2] = 1; d.Y[3] = 0; d.X[4] = -1;
-    assertTrue(d.LIC8());
+    decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 0; decide.X[4] = 0;
+    decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 0; decide.X[4] = -1;
+    assertTrue(decide.LIC8());
 
     // ... and lets assume it is on the line
-    d.parameters.RADIUS1 = 1.581139;
-    assertFalse(d.LIC1());
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
 
     // Test with valid input that has a radius < 1
-    d.X[0] = 0; d.X[1] = 0; d.X[2] = 0.25; d.X[3] = 0; d.X[4] = -0.5;
-    d.Y[0] = 0; d.Y[1] = 0; d.Y[2] = 0.25; d.Y[3] = 0; d.X[4] = 0;
-    assertFalse(d.LIC8());
+    decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 0.25; decide.X[3] = 0; decide.X[4] = -0.5;
+    decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 0.25; decide.Y[3] = 0; decide.X[4] = 0;
+    assertFalse(decide.LIC8());
   }
 
   @Test
