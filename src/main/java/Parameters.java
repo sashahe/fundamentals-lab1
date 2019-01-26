@@ -19,7 +19,5 @@ public class Parameters {
   double RADIUS2;
   double AREA2;
 
-  public Parameters() {
-
-  }
+  public Parameters() {}
 }
