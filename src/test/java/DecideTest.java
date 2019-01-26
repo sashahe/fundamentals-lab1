@@ -371,6 +371,9 @@ public class DecideTest {
     decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 0; decide.X[4] = 0;
     decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 0; decide.X[4] = -1;
     assertTrue(decide.LIC13());
+
+    decide.parameters.RADIUS2 = 1.581138830084;
+    assertTrue(decide.LIC13());
   }
 
   @Test

@@ -267,7 +267,8 @@ public class Decide {
     double radius;
     for (int i = 0; i < this.numpoints - (2 + a + b); i++) {
       radius = getRadiusOfCircleFrom3Points(i, i+a+1, i+a+1+b+1); 
-      if (doubleCompare(radius, this.parameters.RADIUS2) == COMPTYPE.LT) {
+      COMPTYPE c = doubleCompare(radius, this.parameters.RADIUS2);
+      if (c == COMPTYPE.LT || c == COMPTYPE.EQ) {
         return true;
       }
     }
