@@ -253,7 +253,18 @@ public class Decide {
   }
 
   // Returns true if LIC11 is true
+  // There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
+  // exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
+  // condition is not met when NUMPOINTS < 3. 1 ≤ G PTS ≤ NUMPOINTS−2
   public boolean LIC11() {
+    if (this.numpoints < 3)
+      return false;
+    int g = this.parameters.G_PTS;
+
+    for (int i = 0; i <= this.numpoints - g - 2; i++) {
+      if (doubleCompare(X[i+g+1], X[i]) == COMPTYPE.LT)
+        return true;
+    }
     return false;
   }
 
