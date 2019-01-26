@@ -5,7 +5,7 @@ public class Decide {
   public double[] X = new double[100];
   public double[] Y = new double[100];
   public int numpoints = 0;
-  public CONNECTORS[][] LICM = new CONNECTORS[15][15];
+  public CONNECTORS[][] LCM = new CONNECTORS[15][15];
   public boolean[] PUV = new boolean[15];
 
   public boolean[] CMV = new boolean[15];
@@ -16,7 +16,7 @@ public class Decide {
 
   private static final double PI = 3.1415926535;
 
-  private enum CONNECTORS {
+  public enum CONNECTORS {
     NOTUSED, ORR, ANDD
   };
 
@@ -92,12 +92,65 @@ public class Decide {
   }
 
   // Returns true if LIC4 is true
+  // There exists at least one set of Q_PTS data points
+  // that lie in more than QUADS quadrants.
   public boolean LIC4() {
-    return false;
+    boolean quad1, quad2, quad3, quad4;
+    quad1 = quad2 = quad3 = quad4 = false;
+    int numQuads = 0;
+    //Check constraint condition #1
+    if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
+      //Check constraint condition #2
+      if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
+      for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+        for(int j = 0; j < parameters.Q_PTS; j++) {
+          //Check if the point is in quadrant number 1
+          if((X[i+j] >= 0) && (Y[i+j] >= 0)) {
+            if(!quad1) {
+              numQuads++;
+              quad1 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 2
+          if ((X[i+j] <= 0) && (Y[i+j] >= 0)) {
+            if(!quad2) {
+              numQuads++;
+              quad2 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 3
+          if ((X[i+j] <= 0) && (Y[i+j] <= 0)) {
+            if(!quad3) {
+              numQuads++;
+              quad3 = true;
+            }
+          }
+          //Checks if the point is in quadrant number 4
+          if ((X[i+j] >= 0) && (Y[i+j] <= 0)) {
+            if(!quad4) {
+              numQuads++;
+              quad4 = true;
+            }
+          }
+        }
+        if(numQuads > parameters.QUADS)
+          return true;
+      }
+    }
   }
+  return false;
+}
 
   // Returns true if LIC5 is true
+  // There exists at least one set of two consecutive data points,
+  // (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
   public boolean LIC5() {
+    if (this.numpoints < 2)
+      return false;
+    for (int i = 0; i < this.numpoints - 1; i++) {
+      if (doubleCompare(X[i+1], X[i]) == COMPTYPE.LT)
+        return true;
+    }
     return false;
   }
 
@@ -107,7 +160,19 @@ public class Decide {
   }
 
   // Returns true if LIC7 is true
+  // There exists at least one set of two data points separated by exactly K PTS consecutive intervening
+  // points that are a distance greater than the length, LENGTH1, apart. The condition
+  // is not met when NUMPOINTS < 3.
   public boolean LIC7() {
+    if (this.numpoints < 3)
+      return false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      double distance = calculateDistance(i, i + this.parameters.K_PTS + 1);
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -139,8 +204,8 @@ public class Decide {
   }
 
   // Returns true if LIC10 is true
-  //There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
-  //intervening points, respectively, that are the vertices of a triangle with area greater
+  // There exists at least one set of three data points separated by exactly E PTS and F PTS consecutive
+  // intervening points, respectively, that are the vertices of a triangle with area greater
   // than AREA1. The condition is not met when NUMPOINTS < 5.
   public boolean LIC10() {
     if (this.numpoints < 5)
@@ -160,7 +225,30 @@ public class Decide {
   }
 
   // Returns true if LIC12 is true
+  // There exists at least one set of two data points, separated by exactly K PTS consecutive
+  // intervening points, which are a distance greater than the length, LENGTH1, apart. 
+  // In addition, there exists at least one set of two data points (which can be the same or different from
+  // the two data points just mentioned), separated by exactly K PTS consecutive intervening
+  // points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
+  // for the LIC to be true. The condition is not met when NUMPOINTS < 3.
   public boolean LIC12() {
+    if (this.numpoints < 3)
+      return false;
+
+    boolean GT = false;
+    boolean LT = false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      double distance = calculateDistance(i, i + this.parameters.K_PTS + 1);
+
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT)
+        GT = true;
+      if (doubleCompare(distance, this.parameters.LENGTH2) == COMPTYPE.LT)
+        LT = true;
+      if (GT && LT)
+        return true;
+    }
+
     return false;
   }
 
@@ -205,8 +293,24 @@ public class Decide {
     CMV[14] = LIC14();
   };
 
+  // The entries in the LCM represent the logical connectors to be used
+  // between pairs of LICs to determine the corresponding entry in the PUMe.
+  // LCM[i,j] represents the boolean operator to be applied to CMV[i] and CMV[j].
+  // PUM[i,j] is set according to the result of this operation
   public void calculatePUM() {
-    // Matrix operations between CMV and LICM to get PUM
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        if (this.LCM[i][j] == CONNECTORS.NOTUSED) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ORR && (this.CMV[i] || this.CMV[j])) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ANDD && this.CMV[i] && this.CMV[j]) {
+          this.PUM[i][j] = true;
+        } else {
+          this.PUM[i][j] = false;
+        }
+      }
+    }
   }
 
   public void calculateFUV() {
@@ -311,4 +415,4 @@ public class Decide {
     if (Double.isNaN(radius)) { return 0.0; }
     return radius;
   }
-} 
+}
