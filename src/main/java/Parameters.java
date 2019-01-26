@@ -5,7 +5,7 @@ public class Parameters {
   double AREA1;
   int Q_PTS;
   int QUADS;
-  double DIST ;
+  double DIST;
   int N_PTS;
   int K_PTS;
   int A_PTS;
