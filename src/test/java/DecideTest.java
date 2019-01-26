@@ -146,6 +146,36 @@ public class DecideTest {
   }
 
   @Test
+  public void testLIC8() {
+    Decide d = new Decide();
+
+    // No points
+    assertFalse(d.LIC8());
+
+    d.parameters.RADIUS1 = 1;
+    d.parameters.A_PTS = 1;
+    d.parameters.B_PTS = 1;
+    
+    // All points are the same and at origin
+    d.numpoints = 5;
+    assertFalse(d.LIC8());
+
+    // Test valid input with radius bigger than 1
+    d.X[0] = 0; d.X[1] = 0; d.X[2] = 1; d.X[3] = 0; d.X[4] = 0;
+    d.Y[0] = 0; d.Y[1] = 0; d.Y[2] = 1; d.Y[3] = 0; d.X[4] = -1;
+    assertTrue(d.LIC8());
+
+    // ... and lets assume it is on the line
+    d.parameters.RADIUS1 = 1.581139;
+    assertFalse(d.LIC1());
+
+    // Test with valid input that has a radius < 1
+    d.X[0] = 0; d.X[1] = 0; d.X[2] = 0.25; d.X[3] = 0; d.X[4] = -0.5;
+    d.Y[0] = 0; d.Y[1] = 0; d.Y[2] = 0.25; d.Y[3] = 0; d.X[4] = 0;
+    assertFalse(d.LIC8());
+  }
+
+  @Test
   public void testLIC10(){
     Decide decide = new Decide();
     decide.parameters.E_PTS = 1;
