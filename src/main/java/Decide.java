@@ -337,7 +337,11 @@ public class Decide {
 
   public boolean checkFUV() {
     // Check if all values are true,
-    return false;
+    for (int i = 0; i < 15; i++) {
+      if (!(this.FUV[i])) 
+        return false;
+    }
+    return true;
   }
 
   public void decide() {

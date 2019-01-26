@@ -497,4 +497,25 @@ public class DecideTest {
       assertTrue(decide.FUV[i]);
     }
   }
+
+  @Test
+  public void testCheckFUV() {
+    Decide decide = new Decide();
+
+    // All true values in FUV: CheckFUV() should return true
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = true;
+    }
+    assertTrue(decide.checkFUV());
+
+    // Some false value in FUV: CheckFUV() should return false
+    decide.FUV[4] = false;
+    assertFalse(decide.checkFUV());
+
+    // All false values in FUV: CheckFUV() should return false
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = false;
+    }
+    assertFalse(decide.checkFUV());
+  }
 }
