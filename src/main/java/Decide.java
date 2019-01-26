@@ -59,19 +59,13 @@ public class Decide {
   //There exists at least one set of three consecutive data points
   //that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
-    if((0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints)) {
-      double X1, X2, X3, Y1, Y2, Y3;
-      double angle;
-      for(int i = 0; i < numpoints - 2; i++) {
-        X1 = X[i];    Y1 = Y[i];
-        X2 = X[i+1];  Y2 = Y[i+1];
-        X3 = X[i+2];  Y3 = Y[i+2];
-        //The first and last point should not coincide with the vertex (second point)
-        if(((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
+    double angle;
+    for(int i = 0; i < numpoints - 2; i++) {
+      angle = calculateAngle(i, i+1, i+2);
+      if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
+        if(doubleCompare(angle, -1) == COMPTYPE.EQ)
           return false;
-        }
-        angle = calculateAngle(i, i+1, i+2);
-        if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT))
+        else
           return true;
       }
     }
@@ -98,45 +92,41 @@ public class Decide {
     boolean quad1, quad2, quad3, quad4;
     quad1 = quad2 = quad3 = quad4 = false;
     int numQuads = 0;
-    //Check constraint condition #1
-    if((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
-      //Check constraint condition #2
-      if((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
-        for(int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
-          for(int j = 0; j < parameters.Q_PTS; j++) {
-            //Check if the point is in quadrant number 1
-            if((X[i+j] >= 0) && (Y[i+j] >= 0)) {
-              if(!quad1) {
-                numQuads++;
-                quad1 = true;
-              }
-            }
-            //Checks if the point is in quadrant number 2
-            if ((X[i+j] <= 0) && (Y[i+j] >= 0)) {
-              if(!quad2) {
-                numQuads++;
-                quad2 = true;
-              }
-            }
-            //Checks if the point is in quadrant number 3
-            if ((X[i+j] <= 0) && (Y[i+j] <= 0)) {
-              if(!quad3) {
-                numQuads++;
-                quad3 = true;
-              }
-            }
-            //Checks if the point is in quadrant number 4
-            if ((X[i+j] >= 0) && (Y[i+j] <= 0)) {
-              if(!quad4) {
-                numQuads++;
-                quad4 = true;
-              }
-            }
+    for (int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+      for (int j = 0; j < parameters.Q_PTS; j++) {
+        //Check if the point is in quadrant number 1
+        if ((X[i + j] >= 0) && (Y[i + j] >= 0)) {
+          if (!quad1) {
+            numQuads++;
+            quad1 = true;
+          }
+        }
+        //Checks if the point is in quadrant number 2
+        if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
+          if (!quad2) {
+            numQuads++;
+            quad2 = true;
+          }
+        }
+        //Checks if the point is in quadrant number 3
+        if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
+          if (!quad3) {
+            numQuads++;
+            quad3 = true;
+          }
+        }
+          //Checks if the point is in quadrant number 4
+        if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
+          if (!quad4) {
+            numQuads++;
+            quad4 = true;
           }
           if(numQuads > parameters.QUADS)
             return true;
         }
       }
+      if (numQuads > parameters.QUADS)
+        return true;
     }
     return false;
   }
@@ -232,7 +222,24 @@ public class Decide {
   }
 
   // Returns true if LIC9 is true
+  // There exists at least one set of three points separated by C_PTS and D_PTS 
+  // consecutive intervening, respectively, that form an angle such that angle < (PI - EPSILON1)
+  // or angle > (PI + EPSILON1)
   public boolean LIC9() {
+    double angle;
+    int c = parameters.C_PTS;
+    int d = parameters.D_PTS;
+    if(numpoints < 5)
+      return false;
+    for(int i = 0; i < (numpoints - (c + d + 2)); i++) {
+      angle = calculateAngle(i, i+c+1, i+c+d+2);
+      if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
+        if(doubleCompare(angle, -1) == COMPTYPE.EQ)
+          return false;
+        else
+          return true;
+      }
+    }
     return false;
   }
 
@@ -395,7 +402,7 @@ public class Decide {
     return COMPTYPE.GT;
   }
 
-  //Calculates the distance between two coordinates.
+  //Calculates the distance between two points.
   private double calculateDistance (int i, int j) {
     double Ax, Bx, Ay, By;
     Ax = X[i];	Ay = Y[i];
@@ -406,23 +413,31 @@ public class Decide {
     return distance;
   }
 
-  //Calculates the angle between three coordinates.
+  /*
+   * Calculates the angle between three points.
+   * The second point out of the given three points
+   * is always the vertex of the angle.
+   */
   private double calculateAngle (int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];	Ay = Y[i];
     Bx = X[j];	By = Y[j];
     Cx = X[k]; 	Cy = Y[k];
-
-    double A = calculateDistance(i, j);
-    double B = calculateDistance(j, k);
-    double C = calculateDistance(k, i);
-    double sqrtA = Math.sqrt(A);
-    double sqrtB = Math.sqrt(B);
-    double sqrtC = Math.sqrt(C);
-    double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
-    double denominator = 2*A*B;
-    double angle =  Math.acos(numerator/denominator);
-    return angle;
+    //The first and last point should not coincide with the vertex (second point)
+    if(((Ax == Bx) && (Ay == By)) || ((Cx == Bx) && (Cy == By)))
+      return -1;
+    else {
+      double A = calculateDistance(i, j);
+      double B = calculateDistance(j, k);
+      double C = calculateDistance(k, i);
+      double sqrtA = Math.sqrt(A);
+      double sqrtB = Math.sqrt(B);
+      double sqrtC = Math.sqrt(C);
+      double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
+      double denominator = 2*A*B;
+      double angle =  Math.acos(numerator/denominator);
+      return angle;
+    }
   }
 
   private double getArea(int i, int j, int k) {
