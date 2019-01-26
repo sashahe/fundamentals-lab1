@@ -208,7 +208,30 @@ public class Decide {
   }
 
   // Returns true if LIC12 is true
+  // There exists at least one set of two data points, separated by exactly K PTS consecutive
+  // intervening points, which are a distance greater than the length, LENGTH1, apart. 
+  // In addition, there exists at least one set of two data points (which can be the same or different from
+  // the two data points just mentioned), separated by exactly K PTS consecutive intervening
+  // points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
+  // for the LIC to be true. The condition is not met when NUMPOINTS < 3.
   public boolean LIC12() {
+    if (this.numpoints < 3)
+      return false;
+
+    boolean GT = false;
+    boolean LT = false;
+
+    for (int i = 0; i < this.numpoints - (1 + this.parameters.K_PTS); i++) {
+      double distance = calculateDistance(i, i + this.parameters.K_PTS + 1);
+
+      if (doubleCompare(distance, this.parameters.LENGTH1) == COMPTYPE.GT)
+        GT = true;
+      if (doubleCompare(distance, this.parameters.LENGTH2) == COMPTYPE.LT)
+        LT = true;
+      if (GT && LT)
+        return true;
+    }
+
     return false;
   }
 
