@@ -60,13 +60,12 @@ public class Decide {
   //that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
     double angle;
-    //Constraint condition #1
-    if(!(0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints))
-      return false;
     for(int i = 0; i < numpoints - 2; i++) {
       angle = calculateAngle(i, i+1, i+2);
       if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
-        if(!(doubleCompare(angle, -1) == COMPTYPE.EQ))
+        if(doubleCompare(angle, -1) == COMPTYPE.EQ)
+          return false;
+        else
           return true;
       }
     }
@@ -93,12 +92,6 @@ public class Decide {
     boolean quad1, quad2, quad3, quad4;
     quad1 = quad2 = quad3 = quad4 = false;
     int numQuads = 0;
-    //Check constraint condition #1
-    if(!(2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints))
-      return false;
-    //Check constraint condition #2
-    if(!(1 <= parameters.QUADS) && (parameters.QUADS <= 3))
-      return false;
     for (int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
       for (int j = 0; j < parameters.Q_PTS; j++) {
         //Check if the point is in quadrant number 1
@@ -182,19 +175,16 @@ public class Decide {
   // or angle > (PI + EPSILON1)
   public boolean LIC9() {
     double angle;
-    //Constraint condition #1
-    if(!((parameters.C_PTS >= 1) && (parameters.D_PTS >= 1)))
-      return false;
-    //Constraint condition #2
-    if(!((parameters.C_PTS + parameters.D_PTS) <= (numpoints-3)))
-      return false;
-    //Constraint condition #3
+    int c = parameters.C_PTS;
+    int d = parameters.D_PTS;
     if(numpoints < 5)
       return false;
-    for(int i = 0; i < (numpoints - (parameters.C_PTS + parameters.D_PTS + 2)); i++) {
-      angle = calculateAngle(i, i+parameters.C_PTS+1, i+parameters.C_PTS+parameters.D_PTS+2);
+    for(int i = 0; i < (numpoints - (c + d + 2)); i++) {
+      angle = calculateAngle(i, i+c+1, i+c+d+2);
       if((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT) || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
-        if(!(doubleCompare(angle, -1) == COMPTYPE.EQ))
+        if(doubleCompare(angle, -1) == COMPTYPE.EQ)
+          return false;
+        else
           return true;
       }
     }

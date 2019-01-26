@@ -90,9 +90,6 @@ public class DecideTest {
     decide.X[2] = 2; decide.Y[2] = 3;
     assertFalse(decide.LIC2());
 
-    decide.parameters.EPSILON1 = -1;
-    assertFalse(decide.LIC2());
-
     // Test four points
     decide.parameters.EPSILON1 = 2;
     decide.numpoints = 4;
