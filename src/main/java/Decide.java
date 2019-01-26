@@ -176,8 +176,25 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC8 is true
+  /*
+   * There exists at least one set of three data points separated by exactly A_PTS and B_PTS
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1. 
+   * The condition is not met when NUMPOINTS < 5.
+   * 1≤A PTS,1≤B PTS
+   * A_PTS+B_PTS ≤ (NUMPOINTS−3)
+   */
+
   public boolean LIC8() {
+    if (this.numpoints < 5) { return false; }
+    double radius;
+    int a = this.parameters.A_PTS;
+    int b = this.parameters.B_PTS;
+    for (int i = 0; i < this.numpoints - (2 + a + b); i++) {
+      radius = getRadiusOfCircleFrom3Points(i, i+a+1, i+a+1+b+1); 
+      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -373,7 +390,7 @@ public class Decide {
   }
 
   /*
-   * Used in LIC1
+   * Used in LIC1 and LIC8
    * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
    */
   private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {

@@ -47,32 +47,32 @@ public class DecideTest {
 
   @ Test
   public void testLIC1() {
-    Decide d = new Decide();
+    Decide decide = new Decide();
     
     // No input points
-    assertFalse(d.LIC1());
+    assertFalse(decide.LIC1());
 
-    d.parameters.RADIUS1 = 1;
-    d.numpoints = 3;
+    decide.parameters.RADIUS1 = 1;
+    decide.numpoints = 3;
 
     // Test with three points that are all the same
-    d.X[0] = 1; d.X[1] = 1; d.X[2] = 1;
-    d.Y[0] = 1; d.Y[1] = 1; d.Y[2] = 1;
-    assertFalse(d.LIC1());  
+    decide.X[0] = 1; decide.X[1] = 1; decide.X[2] = 1;
+    decide.Y[0] = 1; decide.Y[1] = 1; decide.Y[2] = 1;
+    assertFalse(decide.LIC1());  
 
     // Test valid input with radius bigger than 1
-    d.X[0] = -1; d.X[1] = 0; d.X[2] = 1;
-    d.Y[0] = 0;  d.Y[1] = 0; d.Y[2] = 1;
-    assertTrue(d.LIC1());
+    decide.X[0] = -1; decide.X[1] = 0; decide.X[2] = 1;
+    decide.Y[0] = 0;  decide.Y[1] = 0; decide.Y[2] = 1;
+    assertTrue(decide.LIC1());
 
     // ... and lets assume it is on the line
-    d.parameters.RADIUS1 = 1.581139;
-    assertFalse(d.LIC1());
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
 
     // Test invalid input
-    d.X[0] = -0.5; d.X[1] = 0; d.X[2] = 0.25;
-    d.Y[0] = 0;    d.Y[1] = 0; d.Y[2] = 0.25;
-    assertFalse(d.LIC1());
+    decide.X[0] = -0.5; decide.X[1] = 0; decide.X[2] = 0.25;
+    decide.Y[0] = 0;    decide.Y[1] = 0; decide.Y[2] = 0.25;
+    assertFalse(decide.LIC1());
   }
 
   @Test
@@ -143,42 +143,6 @@ public class DecideTest {
 
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC3());
-  }
-
-  @Test
-  public void testLIC7() {
-    Decide decide = new Decide();
-
-    // No input points
-    assertFalse(decide.LIC7());
-
-    // Testing two points with a distance of sqrt(2).
-    decide.numpoints = 2;
-    decide.parameters.LENGTH1 = 1;
-    decide.parameters.K_PTS = 1;
-
-    decide.X[0] = 0;
-    decide.Y[0] = 0;
-
-    decide.X[1] = 1;
-    decide.Y[1] = 1;
-
-    // Two data points shouldn't be enough
-    assertFalse(decide.LIC7());
-
-    decide.numpoints = 3;
-
-    decide.X[2] = 2;
-    decide.Y[2] = 2;
-
-    // Should be true because sqrt(2) > 1
-    assertTrue(decide.LIC7());
-
-    // But if we se K_PTS to 2 instead
-    decide.parameters.K_PTS = 2;
-
-    // ...it should fail!
-    assertFalse(decide.LIC7());
   }
 
   @Test
@@ -260,6 +224,72 @@ public class DecideTest {
     decide.X[0] = 1; decide.X[1] = 2; decide.X[2] = 3; decide.X[3] = 0;
     decide.Y[0] = 0; decide.Y[1] = 1; decide.Y[2] = 1; decide.Y[3] = 0;
     assertTrue(decide.LIC5());
+  }
+
+  @Test
+  public void testLIC7() {
+    Decide decide = new Decide();
+
+    // No input points
+    assertFalse(decide.LIC7());
+
+    // Testing two points with a distance of sqrt(2).
+    decide.numpoints = 2;
+    decide.parameters.LENGTH1 = 1;
+    decide.parameters.K_PTS = 1;
+
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+
+    decide.X[1] = 1;
+    decide.Y[1] = 1;
+
+    // Two data points shouldn't be enough
+    assertFalse(decide.LIC7());
+
+    decide.numpoints = 3;
+
+    decide.X[2] = 2;
+    decide.Y[2] = 2;
+
+    // Should be true because sqrt(2) > 1
+    assertTrue(decide.LIC7());
+
+    // But if we se K_PTS to 2 instead
+    decide.parameters.K_PTS = 2;
+
+    // ...it should fail!
+    assertFalse(decide.LIC7());
+  }
+
+  @Test
+  public void testLIC8() {
+    Decide decide = new Decide();
+
+    // No points
+    assertFalse(decide.LIC8());
+
+    decide.parameters.RADIUS1 = 1;
+    decide.parameters.A_PTS = 1;
+    decide.parameters.B_PTS = 1;
+    
+    // All points are the same and at origin
+    decide.numpoints = 5;
+    assertFalse(decide.LIC8());
+
+    // Test valid input with radius bigger than 1
+    decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 0; decide.X[4] = 0;
+    decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 0; decide.X[4] = -1;
+    assertTrue(decide.LIC8());
+
+    // ... and lets assume it is on the line
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
+
+    // Test with valid input that has a radius < 1
+    decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 0.25; decide.X[3] = 0; decide.X[4] = -0.5;
+    decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 0.25; decide.Y[3] = 0; decide.X[4] = 0;
+    assertFalse(decide.LIC8());
   }
 
   @Test
