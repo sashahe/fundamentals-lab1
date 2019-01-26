@@ -42,5 +42,3 @@ task installGitHooks(type: Copy) {
 }
 
 build.dependsOn installGitHooks
-
-// build.dependsOn format
