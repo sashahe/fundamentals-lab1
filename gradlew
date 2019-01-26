@@ -6,6 +6,9 @@
 ##
 ##############################################################################
 
+# Manually added for pre commit format hook
+./config/hooks/install-pre-commit
+
 # Attempt to set APP_HOME
 # Resolve links: $0 may be a link
 PRG="$0"
