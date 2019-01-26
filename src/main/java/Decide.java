@@ -252,8 +252,25 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC13 is true
+  /*
+   * There exists at least one set of three data points, separated by exactly A PTS and B PTS 
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1. 
+   * In addition, there exists at least one set of three data points (which can be the same or different 
+   * from the three data points just mentioned) separated by exactly A PTS and B PTS 
+   * consecutive intervening points, respectively, that can be contained in or on a circle of radius RADIUS2. 
+   * Both parts must be true for the LIC to be true. The condition is not met when NUMPOINTS < 5.
+   */
   public boolean LIC13() {
+    if (this.numpoints < 5 || !this.LIC8()) { return false; }
+    int a = this.parameters.A_PTS;
+    int b = this.parameters.B_PTS;
+    double radius;
+    for (int i = 0; i < this.numpoints - (2 + a + b); i++) {
+      radius = getRadiusOfCircleFrom3Points(i, i+a+1, i+a+1+b+1); 
+      if (doubleCompare(radius, this.parameters.RADIUS2) == COMPTYPE.LT) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -390,7 +407,7 @@ public class Decide {
   }
 
   /*
-   * Used in LIC1 and LIC8
+   * Used in LIC1, LIC8 and LIC13
    * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
    */
   private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {

@@ -352,6 +352,28 @@ public class DecideTest {
   }
   
   @Test
+  public void testLIC13() {
+    Decide decide = new Decide();
+
+    // No points
+    assertFalse(decide.LIC13());
+
+    decide.parameters.RADIUS1 = 1;
+    decide.parameters.RADIUS2 = 2;
+    decide.parameters.A_PTS = 1;
+    decide.parameters.B_PTS = 1;
+
+    // All points are the same and at origin
+    decide.numpoints = 5;
+    assertFalse(decide.LIC13());
+    
+    // Test valid input with radius bigger than 1 and smaller than 2
+    decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 0; decide.X[4] = 0;
+    decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 0; decide.X[4] = -1;
+    assertTrue(decide.LIC13());
+  }
+
+  @Test
   public void testLIC14() {
     Decide decide = new Decide();
     decide.parameters.E_PTS = 1;
