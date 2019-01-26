@@ -214,7 +214,7 @@ public class DecideTest {
       }
     }
 
-    // Test a requirement where everything must be true
+    // Test a requirement where all conditions must be true
     for (int i = 0; i < 15; i++) {
       decide.CMV[i] = true;
       for (int j =0; j < 15; j++) {
@@ -224,7 +224,13 @@ public class DecideTest {
 
     decide.calculatePUM();
 
-    // All CMVs are false
+    for (int i = 0; i < 15; i++) {
+      for (int j =0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Setting all conditions to false
     for (int i = 0; i < 15; i++) {
        decide.CMV[i] = false;
     }
