@@ -121,6 +121,8 @@ public class Decide {
             numQuads++;
             quad4 = true;
           }
+          if(numQuads > parameters.QUADS)
+            return true;
         }
       }
       if (numQuads > parameters.QUADS)
@@ -143,7 +145,40 @@ public class Decide {
   }
 
   // Returns true if LIC6 is true
+  // There exists at least one set of N PTS consecutive data points such that at least one of the
+  // points lies a distance greater than DIST from the line joining the first and last of these N PTS
+  // points. If the first and last points of these N PTS are identical, then the calculated distance
+  // to compare with DIST will be the distance from the coincident point to all other points of
+  // the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
+  // (3 ≤ N PTS ≤ NUMPOINTS), (0 ≤ DIST)
   public boolean LIC6() {
+    if (this.numpoints < 3)
+      return false;
+
+    int n = this.parameters.N_PTS;
+    double X1, Xn, Y1, Yn;
+    double dist = 0;
+
+    for (int i = 0; i <= this.numpoints - n; i++) {
+      X1 = X[i]; Xn = X[i + n];
+      Y1 = Y[i]; Yn = Y[i + n];
+
+      // Special case with coincident first and last point
+      if (X1 == Y1 && Xn == Yn) {
+        for (int j = i; j < i+n; j++) {
+          dist = calculateDistance(i, j);
+          if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT)
+            return true;
+        }
+        // otherwise
+      } else {
+        for (int j = i; j < i+n; j++) {
+          dist = calculatePointToLineDistance(i, i+n, j);
+          if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT)
+           return true;
+        }
+      }
+    }
     return false;
   }
 
@@ -400,6 +435,18 @@ public class Decide {
     Bx = X[j]; By = Y[j];
     Cx = X[k]; Cy = Y[k];
     return Math.abs(Ax*(By-Cy) + Bx*(Cy-Ay) + Cx*(Ay-By))/2;
+  }
+
+  // Calculates the distance from a point to a line joining two points A and B
+  // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+  private double calculatePointToLineDistance(int i, int n, int p) {
+    double Ax = X[i]; double Ay = Y[i];
+    double Bx = X[n]; double By = Y[n];
+    double x = X[p]; double y = Y[p];
+
+    double dividend = Math.sqrt(Math.pow(((By-Ay)*x - (Bx-Ax)*y + Bx*Ay - By*Ax), 2));
+    double divisor = Math.sqrt((By-Ay)*(By-Ay) + (Bx-Ax)*(Bx-Ax));
+    return dividend/divisor;
   }
 
   /*

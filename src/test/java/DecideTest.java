@@ -224,6 +224,47 @@ public class DecideTest {
   }
 
   @Test
+  public void testLIC6() {
+    Decide decide = new Decide();
+    decide.numpoints = 3;
+
+    // Need to find 3 consecutive points where at least one point has a distance of >5.5
+    // to the line joining the first and last of these points
+    decide.parameters.N_PTS = 3;
+    decide.parameters.DIST = 5.5;
+
+    // line going through (0,0) and (1,0)
+    decide.X[0] = 0; decide.Y[0] = 0;
+    decide.X[2] = 1; decide.Y[2] = 0;
+    // point at (0,6) should give a distance >5.5
+    decide.X[1] = 0; decide.Y[1] = 6;
+    assertTrue(decide.LIC6());
+
+    // point at (0,5) should give a distance <5.5
+    decide.X[1] = 0; decide.Y[1] = 5;
+    assertFalse(decide.LIC6());
+
+    // the line joining (0,0) and (1,0) shouldn't continue along the x-axis 
+    // so a point at (100, 1) should have a distance >5.5
+    decide.X[1] = 100; decide.Y[1] = 1;
+    assertTrue(decide.LIC6());
+
+    // all consecutive points do not need to have a distance >5.5
+    // and it can be any N consecutive points among all data points
+    decide.numpoints = 5;
+    decide.parameters.N_PTS = 4;
+
+    decide.X[0] = 0; decide.Y[0] = 0;
+    decide.X[1] = 0; decide.Y[1] = 0;
+    decide.X[2] = 1; decide.Y[2] = 0;
+    decide.X[3] = 1; decide.Y[3] = 0;
+    decide.X[4] = 0; decide.Y[4] = 1;
+    assertFalse(decide.LIC6());
+    decide.X[2] = 10; decide.Y[2] = 0;
+    assertTrue(decide.LIC6());
+  }
+
+  @Test
   public void testLIC7() {
     Decide decide = new Decide();
 
