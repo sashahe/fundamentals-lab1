@@ -357,6 +357,37 @@ public class DecideTest {
   }
 
   @Test
+  public void testLIC11() {
+    Decide decide = new Decide();
+    decide.numpoints = 5;
+
+    // Need to find two points P1, P2  with G_PTS = 3 consecutive intervening points 
+    // such that P2x - P1x < 0 <=> P2x < P1x
+    decide.parameters.G_PTS = 3;
+  
+    // X[4] > X[0]: LIC6 should fail
+    decide.X[0] = 4; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 2; decide.X[4] = 4.1;
+    decide.Y[0] = 4; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 2; decide.Y[4] = -1;
+    assertFalse(decide.LIC11());
+
+    // X[4] < X[0]: LIC6 should pass
+    decide.X[0] = -3.8; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 2; decide.X[4] = -3.9;
+    decide.Y[0] = 4; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 2; decide.Y[4] = -1;
+    assertTrue(decide.LIC11());
+
+    // X[4] = X[0]: LIC6 should fail
+    decide.X[0] = 4; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 2; decide.X[4] = 4;
+    decide.Y[0] = 4; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 2; decide.Y[4] = -1;
+    assertFalse(decide.LIC11());
+    
+    // any points separated by G_PTS fulfilling P2x < P1x should do
+    decide.numpoints = 7;
+    decide.X[0] = 4; decide.X[1] = 0; decide.X[2] = 1; decide.X[3] = 2; decide.X[4] = 5; decide.X[5] = -1; decide.X[6] = 5;
+    decide.Y[0] = 4; decide.Y[1] = 0; decide.Y[2] = 1; decide.Y[3] = 2; decide.Y[4] = -1; decide.Y[5] = 4; decide.Y[6] = 0;
+    assertTrue(decide.LIC11());
+  }
+
+  @Test
   public void testLIC12() {
     Decide decide = new Decide();
 
