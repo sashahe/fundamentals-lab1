@@ -4,7 +4,7 @@
 # stash any unstaged changes
 git stash -q --keep-index
 
-./gradlew verifyFormatting
+./gradlew format
 
 # run the tests with the gradle wrapper
 ./gradlew test
