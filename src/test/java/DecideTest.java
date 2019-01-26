@@ -90,9 +90,6 @@ public class DecideTest {
     decide.X[2] = 2; decide.Y[2] = 3;
     assertFalse(decide.LIC2());
 
-    decide.parameters.EPSILON1 = -1;
-    assertFalse(decide.LIC2());
-
     // Test four points
     decide.parameters.EPSILON1 = 2;
     decide.numpoints = 4;
@@ -272,7 +269,7 @@ public class DecideTest {
     decide.parameters.RADIUS1 = 1;
     decide.parameters.A_PTS = 1;
     decide.parameters.B_PTS = 1;
-    
+
     // All points are the same and at origin
     decide.numpoints = 5;
     assertFalse(decide.LIC8());
@@ -290,6 +287,42 @@ public class DecideTest {
     decide.X[0] = 0; decide.X[1] = 0; decide.X[2] = 0.25; decide.X[3] = 0; decide.X[4] = -0.5;
     decide.Y[0] = 0; decide.Y[1] = 0; decide.Y[2] = 0.25; decide.Y[3] = 0; decide.X[4] = 0;
     assertFalse(decide.LIC8());
+  }
+
+  @Test
+  public void testLIC9() {
+    Decide decide = new Decide();
+
+    //No inputs
+    assertFalse(decide.LIC9());
+
+    //Test with two points
+    decide.parameters.EPSILON1 = 1;
+    decide.numpoints = 2;
+    decide.parameters.D_PTS = 20;
+    decide.parameters.C_PTS = 10;
+    assertFalse(decide.LIC9());
+
+    //Test with six points
+    decide.parameters.D_PTS = 2;
+    decide.parameters.C_PTS = 2;
+    decide.numpoints = 7;
+    decide.X[0] = 1; decide.Y[0] = 2;
+    decide.X[1] = 5; decide.Y[2] = 2;
+    decide.X[2] = 5; decide.Y[2] = 2;
+    decide.X[3] = 2; decide.Y[3] = 2;
+    decide.X[4] = 1; decide.Y[4] = 0;
+    decide.X[5] = 2; decide.Y[5] = 7;
+    decide.X[6] = 2; decide.Y[6] = 3;
+    assertTrue(decide.LIC9());
+
+    decide.X[0] = 1; decide.Y[0] = 1;
+    decide.X[3] = 1; decide.Y[3] = 1;
+    decide.X[6] = 1; decide.Y[6] = 1;
+    assertFalse(decide.LIC9());
+
+    decide.numpoints = 4;
+    assertFalse(decide.LIC9());
   }
 
   @Test
