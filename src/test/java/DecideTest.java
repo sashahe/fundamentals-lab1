@@ -354,7 +354,7 @@ public class DecideTest {
         if (i  == 3 || j == 3) {
           decide.LCM[i][j] = Decide.CONNECTORS.ORR;
         } else {
-         decide.LCM[i][j] = Decide.CONNECTORS.NOTUSED;
+          decide.LCM[i][j] = Decide.CONNECTORS.NOTUSED;
         }
       }
     }
