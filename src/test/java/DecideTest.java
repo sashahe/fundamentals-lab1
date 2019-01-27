@@ -556,4 +556,63 @@ public class DecideTest {
       }
     }
   }
+
+  @Test
+  public void testCalculateFUV() {
+    Decide decide = new Decide();
+    
+    // PUV and PUM are default initialised to false
+    // False PUV should yield all true values in FUV
+    decide.calculateFUV();
+    for (int i = 0; i < 15; i++) {
+      assertTrue(decide.FUV[i]);
+    }
+
+    // True PUV[i] and all false PUM[i][x]: false FUV[i]
+    decide.PUV[3] = true;
+    decide.calculateFUV();
+    assertTrue(decide.FUV[2]);
+    assertFalse(decide.FUV[3]);
+    assertTrue(decide.FUV[4]);
+
+    // True PUV[i] and 1 false PUM[i][x]: false FUV[i]
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        decide.PUM[i][j] = true;
+      }
+    }
+    decide.PUM[3][6] = false;
+    decide.calculateFUV();
+    assertTrue(decide.FUV[2]);
+    assertFalse(decide.FUV[3]);
+    assertTrue(decide.FUV[4]);
+
+    // True PUV[i] and all true PUM[i][x]: true FUV[i]
+    decide.PUM[3][6] = true;
+    decide.calculateFUV();
+    for (int i = 0; i < 15; i++) {
+      assertTrue(decide.FUV[i]);
+    }
+  }
+
+  @Test
+  public void testCheckFUV() {
+    Decide decide = new Decide();
+
+    // All true values in FUV: CheckFUV() should return true
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = true;
+    }
+    assertTrue(decide.checkFUV());
+
+    // Some false value in FUV: CheckFUV() should return false
+    decide.FUV[4] = false;
+    assertFalse(decide.checkFUV());
+
+    // All false values in FUV: CheckFUV() should return false
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = false;
+    }
+    assertFalse(decide.checkFUV());
+  }
 }

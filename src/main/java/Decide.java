@@ -382,13 +382,30 @@ public class Decide {
     }
   }
 
+  // FUV is a 15x1 vector
+  // FUV[i] is true if PUV[i] is false or all elements PUM[i][x] are true.
   public void calculateFUV() {
     // PUM (***) PUV -> FUV
+    for (int i = 0; i < 15; i++) {
+      boolean PUMtrue = true;
+      for (int j = 0; j < 15; j++) {
+        if (!(this.PUM[i][j]))
+          PUMtrue = false;
+      }
+      if (!(this.PUV[i]) || PUMtrue)
+        this.FUV[i] = true;
+      else
+        this.FUV[i] = false;
+    }
   }
 
   public boolean checkFUV() {
     // Check if all values are true,
-    return false;
+    for (int i = 0; i < 15; i++) {
+      if (!(this.FUV[i])) 
+        return false;
+    }
+    return true;
   }
 
   public void decide() {
