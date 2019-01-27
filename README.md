@@ -56,6 +56,7 @@ for Mac:
 ```shell
 $ cd /Users/user/my_project
 ```
+
 and type:
 
 ```shell

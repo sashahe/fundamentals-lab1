@@ -606,5 +606,8 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
+.cache
+*.swp
+
 # End of https://www.gitignore.io/api/java,linux,macos,windows,eclipse,intellij,visualstudio
 

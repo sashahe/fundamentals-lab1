@@ -1,3 +1,10 @@
+import com.github.sherter.googlejavaformatgradleplugin.GoogleJavaFormat
+import com.github.sherter.googlejavaformatgradleplugin.VerifyGoogleJavaFormat
+
+plugins {
+  id 'com.github.sherter.google-java-format' version '0.8'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'application'
@@ -5,18 +12,33 @@ apply plugin: 'application'
 mainClassName = 'Main'
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 jar {
-    baseName = 'jb-hello-world'
-    version =  '0.1.0'
+  baseName = 'jb-hello-world'
+  version =  '0.1.0'
 }
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 dependencies {
-    compile "joda-time:joda-time:2.2"
-    testCompile "junit:junit:4.12"
+  compile "joda-time:joda-time:2.2"
+  testCompile "junit:junit:4.12"
 }
+
+googleJavaFormat {
+  toolVersion = "1.6"
+}
+
+task format(type: GoogleJavaFormat) {}
+task verifyFormatting(type: VerifyGoogleJavaFormat) {}
+
+task installGitHooks(type: Copy) {
+  from new File(rootProject.rootDir, 'config/hooks/pre-commit')
+  into { new File(rootProject.rootDir, '.git/hooks') }
+  fileMode 0777
+}
+
+build.dependsOn installGitHooks
