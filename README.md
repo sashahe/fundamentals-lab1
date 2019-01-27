@@ -1,21 +1,21 @@
 # Launch Interceptor Program: Requirements Specification TESTING COMMIT
 
-Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor.
+Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor. 
 
 ## Description
-The Launch Interceptor Program implements a boolean function called Decide(), which determines whether an interceptor should be launch. If the radar tracking information produces a certain combination of Launch Interceptor Conditions (LIC) then the Decide function will return "YES"; indicating that an interceptor should be launch. Conversely, if Decide() returns a "NO" then the interceptor should not be launched. In total there are fifteen LICs which have been implemented as boolean functions; each returning either ´true´ (the LIC was fulfilled) or ´false´ (LIC was not fulfilled).
+The Launch Interceptor Program implements a boolean function called `Decide()`, which determines whether an interceptor should be launch. If the radar tracking information produces a certain combination of Launch Interceptor Conditions (LIC) then the Decide function will return "YES"; indicating that an interceptor should be launch. Conversely, if `Decide()` returns a "NO" then the interceptor should not be launched. In total there are fifteen LICs which have been implemented as boolean functions; each returning either `true` (the LIC was fulfilled) or `false` (LIC was not fulfilled).
 
-* The *Condition Met Vector* (CMV) is boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. CMV[i] is assigned as ´true´ if the LIC #i has been satisfied.
+* The *Condition Met Vector* (CMV) is boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. `CVM[i]` is assigned as ´true´ if the LIC #i has been satisfied.
 
 * The *Logical Connector Matrix* (LCM) is a 15x15 matrix with entries of logical connectors; **ANDD**, **ORR** and **NOTUSED**. It determines how an individual LIC (e.g. LIC #i) should be logically combined with another LIC (e.g. LIC #j).
 
-* The *Preliminary Unlocking Matrix* (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. PUM[i][j] is false if either CVM[i] or CVM[j] is false and LCM[i][j] is ´ANDD´.
+* The *Preliminary Unlocking Matrix* (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. `PUM[i][j]` is false if either `CVM[i]` or `CVM[j]` is false and `LCM[i][j]` is ANDD.
 
 * The *Preliminary Unlocking Vector* (PUV) is a boolean vector that indicates whether the LIC should be considered for the interceptor to launch, where each entry corresponds to a LIC.
 
-* The *Final Unlocking Matrix* (FUV) is formed from combining PUV and PUM. For example, FUV[i] is set to ´true´ if either PUV[i] is false (LIC #i should not hold back launch) or if all elements in the PUM[i] row is true.
+* The *Final Unlocking Matrix* (FUV) is formed from combining PUV and PUM. For example, `FUV[i]` is set to `true` if either `PUV[i]` is false (LIC #i should not hold back launch) or if all elements in the `PUM[i]` row is true.
 
-Lastly, Decide() determines if the interceptor should launch by checking that all the entries in FUV are true. In all other cases (e.g. if at least one FUV[i] is false), the interceptor should not launch.
+Lastly, Decide() determines if the interceptor should launch by checking that all the entries in FUV are true. In all other cases (e.g. if at least one `FUV[i]` is false), the interceptor should not launch.
 
 ## Motivation
 The aim of this project is to implement a program according to the modern development techniques, which was an assignment given by the course DD2480 Software Engineering Fundamentals. The project was devised from the material in "An experimental evaluation of the assumption of independence in multi-version programming" by J.C. Knight and N.G. Leveson, IEEE Transactions on Software Engineering 12(1):96-109 January 1986 (adapted by John Regehr and Martin Monperrus).
@@ -59,14 +59,12 @@ $ cd /Users/user/my_project
 and type:
 
 ```shell
-$ git init
 $ git clone https://github.com/adibbin/fundamentals-lab1.git
 ```
 
 ### Prerequisites
 
 * Gradle version 5.1.1 or greater
-* Travis CI version ???
 * JUnit version 4.12 or greater
 * JDK version 8
 
@@ -74,6 +72,12 @@ See section [Built With](#built-with) for more details on the tools.
 
 ## How to run
 
+The program will run an instance of `Decide()` with defined global declarations, which are the pre-determined radar tracking data. The program can be compiled and run through the console by using the following commands:
+
+```shell
+javac src/main/java/Decide.java
+java src/main/java/Decide
+```
 
 ## Running Tests
 
