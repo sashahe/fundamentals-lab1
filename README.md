@@ -79,6 +79,12 @@ cd src/main/java/
 javac Decide.java
 java Decide
 ```
+or 
+
+```shell
+gradle build
+gradle run
+```
 
 ## Running Tests
 
