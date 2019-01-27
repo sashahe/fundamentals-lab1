@@ -5,7 +5,7 @@ public class Decide {
   public double[] X = new double[100];
   public double[] Y = new double[100];
   public int numpoints = 0;
-  public CONNECTORS[][] LICM = new CONNECTORS[15][15];
+  public CONNECTORS[][] LCM = new CONNECTORS[15][15];
   public boolean[] PUV = new boolean[15];
 
   public boolean[] CMV = new boolean[15];
@@ -16,13 +16,13 @@ public class Decide {
 
   private static final double PI = 3.1415926535;
 
-  private enum CONNECTORS {
+  public enum CONNECTORS {
     NOTUSED,
     ORR,
     ANDD
   };
 
-  private enum COMPTYPE {
+  public enum COMPTYPE {
     LT,
     EQ,
     GT
@@ -62,23 +62,13 @@ public class Decide {
   // There exists at least one set of three consecutive data points
   // that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
   public boolean LIC2() {
-    if ((0 <= parameters.EPSILON1) && (parameters.EPSILON1 < PI) && (3 <= numpoints)) {
-      double X1, X2, X3, Y1, Y2, Y3;
-      double angle;
-      for (int i = 0; i < numpoints - 2; i++) {
-        X1 = X[i];
-        Y1 = Y[i];
-        X2 = X[i + 1];
-        Y2 = Y[i + 1];
-        X3 = X[i + 2];
-        Y3 = Y[i + 2];
-        // The first and last point should not coincide with the vertex (second point)
-        if (((X1 == X2) && (Y1 == Y2)) || ((X3 == X2) && (Y3 == Y2))) {
-          return false;
-        }
-        angle = calculateAngle(i, i + 1, i + 2);
-        if ((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT)
-            || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) return true;
+    double angle;
+    for (int i = 0; i < numpoints - 2; i++) {
+      angle = calculateAngle(i, i + 1, i + 2);
+      if ((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT)
+          || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
+        if (doubleCompare(angle, -1) == COMPTYPE.EQ) return false;
+        else return true;
       }
     }
     return false;
@@ -103,44 +93,39 @@ public class Decide {
     boolean quad1, quad2, quad3, quad4;
     quad1 = quad2 = quad3 = quad4 = false;
     int numQuads = 0;
-    // Check constraint condition #1
-    if ((2 <= parameters.Q_PTS) && (parameters.Q_PTS <= numpoints)) {
-      // Check constraint condition #2
-      if ((1 <= parameters.QUADS) && (parameters.QUADS <= 3)) {
-        for (int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
-          for (int j = 0; j < parameters.Q_PTS; j++) {
-            // Check if the point is in quadrant number 1
-            if ((X[i + j] >= 0) && (Y[i + j] >= 0)) {
-              if (!quad1) {
-                numQuads++;
-                quad1 = true;
-              }
-            }
-            // Checks if the point is in quadrant number 2
-            if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
-              if (!quad2) {
-                numQuads++;
-                quad2 = true;
-              }
-            }
-            // Checks if the point is in quadrant number 3
-            if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
-              if (!quad3) {
-                numQuads++;
-                quad3 = true;
-              }
-            }
-            // Checks if the point is in quadrant number 4
-            if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
-              if (!quad4) {
-                numQuads++;
-                quad4 = true;
-              }
-            }
+    for (int i = 0; i < (numpoints - parameters.Q_PTS + 1); i++) {
+      for (int j = 0; j < parameters.Q_PTS; j++) {
+        // Check if the point is in quadrant number 1
+        if ((X[i + j] >= 0) && (Y[i + j] >= 0)) {
+          if (!quad1) {
+            numQuads++;
+            quad1 = true;
+          }
+        }
+        // Checks if the point is in quadrant number 2
+        if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
+          if (!quad2) {
+            numQuads++;
+            quad2 = true;
+          }
+        }
+        // Checks if the point is in quadrant number 3
+        if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
+          if (!quad3) {
+            numQuads++;
+            quad3 = true;
+          }
+        }
+        // Checks if the point is in quadrant number 4
+        if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
+          if (!quad4) {
+            numQuads++;
+            quad4 = true;
           }
           if (numQuads > parameters.QUADS) return true;
         }
       }
+      if (numQuads > parameters.QUADS) return true;
     }
     return false;
   }
@@ -157,7 +142,40 @@ public class Decide {
   }
 
   // Returns true if LIC6 is true
+  // There exists at least one set of N PTS consecutive data points such that at least one of the
+  // points lies a distance greater than DIST from the line joining the first and last of these N
+  // PTS
+  // points. If the first and last points of these N PTS are identical, then the calculated distance
+  // to compare with DIST will be the distance from the coincident point to all other points of
+  // the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
+  // (3 ≤ N PTS ≤ NUMPOINTS), (0 ≤ DIST)
   public boolean LIC6() {
+    if (this.numpoints < 3) return false;
+
+    int n = this.parameters.N_PTS;
+    double X1, Xn, Y1, Yn;
+    double dist = 0;
+
+    for (int i = 0; i <= this.numpoints - n; i++) {
+      X1 = X[i];
+      Xn = X[i + n];
+      Y1 = Y[i];
+      Yn = Y[i + n];
+
+      // Special case with coincident first and last point
+      if (X1 == Y1 && Xn == Yn) {
+        for (int j = i; j < i + n; j++) {
+          dist = calculateDistance(i, j);
+          if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
+        }
+        // otherwise
+      } else {
+        for (int j = i; j < i + n; j++) {
+          dist = calculatePointToLineDistance(i, i + n, j);
+          if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
+        }
+      }
+    }
     return false;
   }
 
@@ -178,13 +196,47 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC8 is true
+  /*
+   * There exists at least one set of three data points separated by exactly A_PTS and B_PTS
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
+   * The condition is not met when NUMPOINTS < 5.
+   * 1≤A PTS,1≤B PTS
+   * A_PTS+B_PTS ≤ (NUMPOINTS−3)
+   */
+
   public boolean LIC8() {
+    if (this.numpoints < 5) {
+      return false;
+    }
+    double radius;
+    int a = this.parameters.A_PTS;
+    int b = this.parameters.B_PTS;
+    for (int i = 0; i < this.numpoints - (2 + a + b); i++) {
+      radius = getRadiusOfCircleFrom3Points(i, i + a + 1, i + a + 1 + b + 1);
+      if (doubleCompare(radius, this.parameters.RADIUS1) == COMPTYPE.GT) {
+        return true;
+      }
+    }
     return false;
   }
 
   // Returns true if LIC9 is true
+  // There exists at least one set of three points separated by C_PTS and D_PTS
+  // consecutive intervening, respectively, that form an angle such that angle < (PI - EPSILON1)
+  // or angle > (PI + EPSILON1)
   public boolean LIC9() {
+    double angle;
+    int c = parameters.C_PTS;
+    int d = parameters.D_PTS;
+    if (numpoints < 5) return false;
+    for (int i = 0; i < (numpoints - (c + d + 2)); i++) {
+      angle = calculateAngle(i, i + c + 1, i + c + d + 2);
+      if ((doubleCompare(angle, (PI + parameters.EPSILON1)) == COMPTYPE.GT)
+          || (doubleCompare(angle, (PI - parameters.EPSILON1)) == COMPTYPE.LT)) {
+        if (doubleCompare(angle, -1) == COMPTYPE.EQ) return false;
+        else return true;
+      }
+    }
     return false;
   }
 
@@ -205,7 +257,16 @@ public class Decide {
   }
 
   // Returns true if LIC11 is true
+  // There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
+  // exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
+  // condition is not met when NUMPOINTS < 3. 1 ≤ G PTS ≤ NUMPOINTS−2
   public boolean LIC11() {
+    if (this.numpoints < 3) return false;
+    int g = this.parameters.G_PTS;
+
+    for (int i = 0; i <= this.numpoints - g - 2; i++) {
+      if (doubleCompare(X[i + g + 1], X[i]) == COMPTYPE.LT) return true;
+    }
     return false;
   }
 
@@ -234,8 +295,28 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC13 is true
+  /*
+   * There exists at least one set of three data points, separated by exactly A PTS and B PTS
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
+   * In addition, there exists at least one set of three data points (which can be the same or different
+   * from the three data points just mentioned) separated by exactly A PTS and B PTS
+   * consecutive intervening points, respectively, that can be contained in or on a circle of radius RADIUS2.
+   * Both parts must be true for the LIC to be true. The condition is not met when NUMPOINTS < 5.
+   */
   public boolean LIC13() {
+    if (this.numpoints < 5 || !this.LIC8()) {
+      return false;
+    }
+    int a = this.parameters.A_PTS;
+    int b = this.parameters.B_PTS;
+    double radius;
+    for (int i = 0; i < this.numpoints - (2 + a + b); i++) {
+      radius = getRadiusOfCircleFrom3Points(i, i + a + 1, i + a + 1 + b + 1);
+      COMPTYPE c = doubleCompare(radius, this.parameters.RADIUS2);
+      if (c == COMPTYPE.LT || c == COMPTYPE.EQ) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -275,17 +356,46 @@ public class Decide {
     CMV[14] = LIC14();
   };
 
+  // The entries in the LCM represent the logical connectors to be used
+  // between pairs of LICs to determine the corresponding entry in the PUMe.
+  // LCM[i,j] represents the boolean operator to be applied to CMV[i] and CMV[j].
+  // PUM[i,j] is set according to the result of this operation
   public void calculatePUM() {
-    // Matrix operations between CMV and LICM to get PUM
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        if (this.LCM[i][j] == CONNECTORS.NOTUSED) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ORR && (this.CMV[i] || this.CMV[j])) {
+          this.PUM[i][j] = true;
+        } else if (this.LCM[i][j] == CONNECTORS.ANDD && this.CMV[i] && this.CMV[j]) {
+          this.PUM[i][j] = true;
+        } else {
+          this.PUM[i][j] = false;
+        }
+      }
+    }
   }
 
+  // FUV is a 15x1 vector
+  // FUV[i] is true if PUV[i] is false or all elements PUM[i][x] are true.
   public void calculateFUV() {
     // PUM (***) PUV -> FUV
+    for (int i = 0; i < 15; i++) {
+      boolean PUMtrue = true;
+      for (int j = 0; j < 15; j++) {
+        if (!(this.PUM[i][j])) PUMtrue = false;
+      }
+      if (!(this.PUV[i]) || PUMtrue) this.FUV[i] = true;
+      else this.FUV[i] = false;
+    }
   }
 
   public boolean checkFUV() {
     // Check if all values are true,
-    return false;
+    for (int i = 0; i < 15; i++) {
+      if (!(this.FUV[i])) return false;
+    }
+    return true;
   }
 
   public void decide() {
@@ -328,7 +438,11 @@ public class Decide {
     return distance;
   }
 
-  // Calculates the angle between three coordinates.
+  /*
+   * Calculates the angle between three points.
+   * The second point out of the given three points
+   * is always the vertex of the angle.
+   */
   private double calculateAngle(int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];
@@ -337,17 +451,20 @@ public class Decide {
     By = Y[j];
     Cx = X[k];
     Cy = Y[k];
-
-    double A = calculateDistance(i, j);
-    double B = calculateDistance(j, k);
-    double C = calculateDistance(k, i);
-    double sqrtA = Math.sqrt(A);
-    double sqrtB = Math.sqrt(B);
-    double sqrtC = Math.sqrt(C);
-    double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
-    double denominator = 2 * A * B;
-    double angle = Math.acos(numerator / denominator);
-    return angle;
+    // The first and last point should not coincide with the vertex (second point)
+    if (((Ax == Bx) && (Ay == By)) || ((Cx == Bx) && (Cy == By))) return -1;
+    else {
+      double A = calculateDistance(i, j);
+      double B = calculateDistance(j, k);
+      double C = calculateDistance(k, i);
+      double sqrtA = Math.sqrt(A);
+      double sqrtB = Math.sqrt(B);
+      double sqrtC = Math.sqrt(C);
+      double numerator = Math.sqrt(sqrtA + sqrtB - sqrtC);
+      double denominator = 2 * A * B;
+      double angle = Math.acos(numerator / denominator);
+      return angle;
+    }
   }
 
   private double getArea(int i, int j, int k) {
@@ -361,8 +478,23 @@ public class Decide {
     return Math.abs(Ax * (By - Cy) + Bx * (Cy - Ay) + Cx * (Ay - By)) / 2;
   }
 
+  // Calculates the distance from a point to a line joining two points A and B
+  // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+  private double calculatePointToLineDistance(int i, int n, int p) {
+    double Ax = X[i];
+    double Ay = Y[i];
+    double Bx = X[n];
+    double By = Y[n];
+    double x = X[p];
+    double y = Y[p];
+
+    double dividend = Math.sqrt(Math.pow(((By - Ay) * x - (Bx - Ax) * y + Bx * Ay - By * Ax), 2));
+    double divisor = Math.sqrt((By - Ay) * (By - Ay) + (Bx - Ax) * (Bx - Ax));
+    return dividend / divisor;
+  }
+
   /*
-   * Used in LIC1
+   * Used in LIC1, LIC8 and LIC13
    * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
    */
   private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {

@@ -48,44 +48,44 @@ public class DecideTest {
 
   @Test
   public void testLIC1() {
-    Decide d = new Decide();
+    Decide decide = new Decide();
 
     // No input points
-    assertFalse(d.LIC1());
+    assertFalse(decide.LIC1());
 
-    d.parameters.RADIUS1 = 1;
-    d.numpoints = 3;
+    decide.parameters.RADIUS1 = 1;
+    decide.numpoints = 3;
 
     // Test with three points that are all the same
-    d.X[0] = 1;
-    d.X[1] = 1;
-    d.X[2] = 1;
-    d.Y[0] = 1;
-    d.Y[1] = 1;
-    d.Y[2] = 1;
-    assertFalse(d.LIC1());
+    decide.X[0] = 1;
+    decide.X[1] = 1;
+    decide.X[2] = 1;
+    decide.Y[0] = 1;
+    decide.Y[1] = 1;
+    decide.Y[2] = 1;
+    assertFalse(decide.LIC1());
 
     // Test valid input with radius bigger than 1
-    d.X[0] = -1;
-    d.X[1] = 0;
-    d.X[2] = 1;
-    d.Y[0] = 0;
-    d.Y[1] = 0;
-    d.Y[2] = 1;
-    assertTrue(d.LIC1());
+    decide.X[0] = -1;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.Y[0] = 0;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    assertTrue(decide.LIC1());
 
     // ... and lets assume it is on the line
-    d.parameters.RADIUS1 = 1.581139;
-    assertFalse(d.LIC1());
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
 
     // Test invalid input
-    d.X[0] = -0.5;
-    d.X[1] = 0;
-    d.X[2] = 0.25;
-    d.Y[0] = 0;
-    d.Y[1] = 0;
-    d.Y[2] = 0.25;
-    assertFalse(d.LIC1());
+    decide.X[0] = -0.5;
+    decide.X[1] = 0;
+    decide.X[2] = 0.25;
+    decide.Y[0] = 0;
+    decide.Y[1] = 0;
+    decide.Y[2] = 0.25;
+    assertFalse(decide.LIC1());
   }
 
   @Test
@@ -104,9 +104,6 @@ public class DecideTest {
     decide.Y[1] = 2;
     decide.X[2] = 2;
     decide.Y[2] = 3;
-    assertFalse(decide.LIC2());
-
-    decide.parameters.EPSILON1 = -1;
     assertFalse(decide.LIC2());
 
     // Test four points
@@ -181,42 +178,6 @@ public class DecideTest {
 
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC3());
-  }
-
-  @Test
-  public void testLIC7() {
-    Decide decide = new Decide();
-
-    // No input points
-    assertFalse(decide.LIC7());
-
-    // Testing two points with a distance of sqrt(2).
-    decide.numpoints = 2;
-    decide.parameters.LENGTH1 = 1;
-    decide.parameters.K_PTS = 1;
-
-    decide.X[0] = 0;
-    decide.Y[0] = 0;
-
-    decide.X[1] = 1;
-    decide.Y[1] = 1;
-
-    // Two data points shouldn't be enough
-    assertFalse(decide.LIC7());
-
-    decide.numpoints = 3;
-
-    decide.X[2] = 2;
-    decide.Y[2] = 2;
-
-    // Should be true because sqrt(2) > 1
-    assertTrue(decide.LIC7());
-
-    // But if we se K_PTS to 2 instead
-    decide.parameters.K_PTS = 2;
-
-    // ...it should fail!
-    assertFalse(decide.LIC7());
   }
 
   @Test
@@ -313,6 +274,186 @@ public class DecideTest {
   }
 
   @Test
+  public void testLIC6() {
+    Decide decide = new Decide();
+    decide.numpoints = 3;
+
+    // Need to find 3 consecutive points where at least one point has a distance of >5.5
+    // to the line joining the first and last of these points
+    decide.parameters.N_PTS = 3;
+    decide.parameters.DIST = 5.5;
+
+    // line going through (0,0) and (1,0)
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+    decide.X[2] = 1;
+    decide.Y[2] = 0;
+    // point at (0,6) should give a distance >5.5
+    decide.X[1] = 0;
+    decide.Y[1] = 6;
+    assertTrue(decide.LIC6());
+
+    // point at (0,5) should give a distance <5.5
+    decide.X[1] = 0;
+    decide.Y[1] = 5;
+    assertFalse(decide.LIC6());
+
+    // the line joining (0,0) and (1,0) shouldn't continue along the x-axis
+    // so a point at (100, 1) should have a distance >5.5
+    decide.X[1] = 100;
+    decide.Y[1] = 1;
+    assertTrue(decide.LIC6());
+
+    // all consecutive points do not need to have a distance >5.5
+    // and it can be any N consecutive points among all data points
+    decide.numpoints = 5;
+    decide.parameters.N_PTS = 4;
+
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+    decide.X[1] = 0;
+    decide.Y[1] = 0;
+    decide.X[2] = 1;
+    decide.Y[2] = 0;
+    decide.X[3] = 1;
+    decide.Y[3] = 0;
+    decide.X[4] = 0;
+    decide.Y[4] = 1;
+    assertFalse(decide.LIC6());
+    decide.X[2] = 10;
+    decide.Y[2] = 0;
+    assertTrue(decide.LIC6());
+  }
+
+  @Test
+  public void testLIC7() {
+    Decide decide = new Decide();
+
+    // No input points
+    assertFalse(decide.LIC7());
+
+    // Testing two points with a distance of sqrt(2).
+    decide.numpoints = 2;
+    decide.parameters.LENGTH1 = 1;
+    decide.parameters.K_PTS = 1;
+
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+
+    decide.X[1] = 1;
+    decide.Y[1] = 1;
+
+    // Two data points shouldn't be enough
+    assertFalse(decide.LIC7());
+
+    decide.numpoints = 3;
+
+    decide.X[2] = 2;
+    decide.Y[2] = 2;
+
+    // Should be true because sqrt(2) > 1
+    assertTrue(decide.LIC7());
+
+    // But if we se K_PTS to 2 instead
+    decide.parameters.K_PTS = 2;
+
+    // ...it should fail!
+    assertFalse(decide.LIC7());
+  }
+
+  @Test
+  public void testLIC8() {
+    Decide decide = new Decide();
+
+    // No points
+    assertFalse(decide.LIC8());
+
+    decide.parameters.RADIUS1 = 1;
+    decide.parameters.A_PTS = 1;
+    decide.parameters.B_PTS = 1;
+
+    // All points are the same and at origin
+    decide.numpoints = 5;
+    assertFalse(decide.LIC8());
+
+    // Test valid input with radius bigger than 1
+    decide.X[0] = 0;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 0;
+    decide.X[4] = 0;
+    decide.Y[0] = 0;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 0;
+    decide.X[4] = -1;
+    assertTrue(decide.LIC8());
+
+    // ... and lets assume it is on the line
+    decide.parameters.RADIUS1 = 1.581139;
+    assertFalse(decide.LIC1());
+
+    // Test with valid input that has a radius < 1
+    decide.X[0] = 0;
+    decide.X[1] = 0;
+    decide.X[2] = 0.25;
+    decide.X[3] = 0;
+    decide.X[4] = -0.5;
+    decide.Y[0] = 0;
+    decide.Y[1] = 0;
+    decide.Y[2] = 0.25;
+    decide.Y[3] = 0;
+    decide.X[4] = 0;
+    assertFalse(decide.LIC8());
+  }
+
+  @Test
+  public void testLIC9() {
+    Decide decide = new Decide();
+
+    // No inputs
+    assertFalse(decide.LIC9());
+
+    // Test with two points
+    decide.parameters.EPSILON1 = 1;
+    decide.numpoints = 2;
+    decide.parameters.D_PTS = 20;
+    decide.parameters.C_PTS = 10;
+    assertFalse(decide.LIC9());
+
+    // Test with six points
+    decide.parameters.D_PTS = 2;
+    decide.parameters.C_PTS = 2;
+    decide.numpoints = 7;
+    decide.X[0] = 1;
+    decide.Y[0] = 2;
+    decide.X[1] = 5;
+    decide.Y[2] = 2;
+    decide.X[2] = 5;
+    decide.Y[2] = 2;
+    decide.X[3] = 2;
+    decide.Y[3] = 2;
+    decide.X[4] = 1;
+    decide.Y[4] = 0;
+    decide.X[5] = 2;
+    decide.Y[5] = 7;
+    decide.X[6] = 2;
+    decide.Y[6] = 3;
+    assertTrue(decide.LIC9());
+
+    decide.X[0] = 1;
+    decide.Y[0] = 1;
+    decide.X[3] = 1;
+    decide.Y[3] = 1;
+    decide.X[6] = 1;
+    decide.Y[6] = 1;
+    assertFalse(decide.LIC9());
+
+    decide.numpoints = 4;
+    assertFalse(decide.LIC9());
+  }
+
+  @Test
   public void testLIC10() {
     Decide decide = new Decide();
     decide.parameters.E_PTS = 1;
@@ -341,6 +482,73 @@ public class DecideTest {
     assertFalse(decide.LIC10());
     decide.parameters.AREA1 = 0.49;
     assertTrue(decide.LIC10());
+  }
+
+  @Test
+  public void testLIC11() {
+    Decide decide = new Decide();
+    decide.numpoints = 5;
+
+    // Need to find two points P1, P2  with G_PTS = 3 consecutive intervening points
+    // such that P2x - P1x < 0 <=> P2x < P1x
+    decide.parameters.G_PTS = 3;
+
+    // X[4] > X[0]: LIC6 should fail
+    decide.X[0] = 4;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 2;
+    decide.X[4] = 4.1;
+    decide.Y[0] = 4;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 2;
+    decide.Y[4] = -1;
+    assertFalse(decide.LIC11());
+
+    // X[4] < X[0]: LIC6 should pass
+    decide.X[0] = -3.8;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 2;
+    decide.X[4] = -3.9;
+    decide.Y[0] = 4;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 2;
+    decide.Y[4] = -1;
+    assertTrue(decide.LIC11());
+
+    // X[4] = X[0]: LIC6 should fail
+    decide.X[0] = 4;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 2;
+    decide.X[4] = 4;
+    decide.Y[0] = 4;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 2;
+    decide.Y[4] = -1;
+    assertFalse(decide.LIC11());
+
+    // any points separated by G_PTS fulfilling P2x < P1x should do
+    decide.numpoints = 7;
+    decide.X[0] = 4;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 2;
+    decide.X[4] = 5;
+    decide.X[5] = -1;
+    decide.X[6] = 5;
+    decide.Y[0] = 4;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 2;
+    decide.Y[4] = -1;
+    decide.Y[5] = 4;
+    decide.Y[6] = 0;
+    assertTrue(decide.LIC11());
   }
 
   @Test
@@ -380,6 +588,39 @@ public class DecideTest {
   }
 
   @Test
+  public void testLIC13() {
+    Decide decide = new Decide();
+
+    // No points
+    assertFalse(decide.LIC13());
+
+    decide.parameters.RADIUS1 = 1;
+    decide.parameters.RADIUS2 = 2;
+    decide.parameters.A_PTS = 1;
+    decide.parameters.B_PTS = 1;
+
+    // All points are the same and at origin
+    decide.numpoints = 5;
+    assertFalse(decide.LIC13());
+
+    // Test valid input with radius bigger than 1 and smaller than 2
+    decide.X[0] = 0;
+    decide.X[1] = 0;
+    decide.X[2] = 1;
+    decide.X[3] = 0;
+    decide.X[4] = 0;
+    decide.Y[0] = 0;
+    decide.Y[1] = 0;
+    decide.Y[2] = 1;
+    decide.Y[3] = 0;
+    decide.X[4] = -1;
+    assertTrue(decide.LIC13());
+
+    decide.parameters.RADIUS2 = 1.581138830084;
+    assertTrue(decide.LIC13());
+  }
+
+  @Test
   public void testLIC14() {
     Decide decide = new Decide();
     decide.parameters.E_PTS = 1;
@@ -404,5 +645,118 @@ public class DecideTest {
 
     decide.parameters.AREA2 = 0.51;
     assertTrue(decide.LIC14());
+  }
+
+  @Test
+  public void testCalculatePUM() {
+    Decide decide = new Decide();
+    decide.CMV[3] = true;
+
+    // Test a requirement where only LIC3 must be true
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        if (i == 3 || j == 3) {
+          decide.LCM[i][j] = Decide.CONNECTORS.ORR;
+        } else {
+          decide.LCM[i][j] = Decide.CONNECTORS.NOTUSED;
+        }
+      }
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Test a requirement where all conditions must be true
+    for (int i = 0; i < 15; i++) {
+      decide.CMV[i] = true;
+      for (int j = 0; j < 15; j++) {
+        decide.LCM[i][j] = Decide.CONNECTORS.ANDD;
+      }
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        assertTrue(decide.PUM[i][j]);
+      }
+    }
+
+    // Setting all conditions to false
+    for (int i = 0; i < 15; i++) {
+      decide.CMV[i] = false;
+    }
+
+    decide.calculatePUM();
+
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        assertFalse(decide.PUM[i][j]);
+      }
+    }
+  }
+
+  @Test
+  public void testCalculateFUV() {
+    Decide decide = new Decide();
+
+    // PUV and PUM are default initialised to false
+    // False PUV should yield all true values in FUV
+    decide.calculateFUV();
+    for (int i = 0; i < 15; i++) {
+      assertTrue(decide.FUV[i]);
+    }
+
+    // True PUV[i] and all false PUM[i][x]: false FUV[i]
+    decide.PUV[3] = true;
+    decide.calculateFUV();
+    assertTrue(decide.FUV[2]);
+    assertFalse(decide.FUV[3]);
+    assertTrue(decide.FUV[4]);
+
+    // True PUV[i] and 1 false PUM[i][x]: false FUV[i]
+    for (int i = 0; i < 15; i++) {
+      for (int j = 0; j < 15; j++) {
+        decide.PUM[i][j] = true;
+      }
+    }
+    decide.PUM[3][6] = false;
+    decide.calculateFUV();
+    assertTrue(decide.FUV[2]);
+    assertFalse(decide.FUV[3]);
+    assertTrue(decide.FUV[4]);
+
+    // True PUV[i] and all true PUM[i][x]: true FUV[i]
+    decide.PUM[3][6] = true;
+    decide.calculateFUV();
+    for (int i = 0; i < 15; i++) {
+      assertTrue(decide.FUV[i]);
+    }
+  }
+
+  @Test
+  public void testCheckFUV() {
+    Decide decide = new Decide();
+
+    // All true values in FUV: CheckFUV() should return true
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = true;
+    }
+    assertTrue(decide.checkFUV());
+
+    // Some false value in FUV: CheckFUV() should return false
+    decide.FUV[4] = false;
+    assertFalse(decide.checkFUV());
+
+    // All false values in FUV: CheckFUV() should return false
+    for (int i = 0; i < 15; i++) {
+      decide.FUV[i] = false;
+    }
+    assertFalse(decide.checkFUV());
   }
 }
