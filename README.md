@@ -89,11 +89,11 @@ gradle test
 ```
 Running the tests should either pass or fail. If the test(s) pass, it should look something like this:
 
-![Pass](/path/to/img.jpg)
+![Pass](https://github.com/adibbin/fundamentals-lab1/blob/issue/4/PassTest.png)
 
 and if it fails:
 
-![Fail](/path/to/img.jpg)
+![Fail](https://github.com/adibbin/fundamentals-lab1/blob/issue/4/FailTest.png)
 
 The tests also verifies whether or not the Java code follows our code style. See the section [Code Style](#code-style) for further details.
 
