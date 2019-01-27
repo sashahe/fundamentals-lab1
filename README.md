@@ -1,25 +1,27 @@
 # Launch Interceptor Program: Requirements Specification
 
-Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor.
+Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor. 
 
 ## Description
-
 The Launch Interceptor Program implements a boolean function called `Decide()`, which determines whether an interceptor should be launch. If the radar tracking information produces a certain combination of Launch Interceptor Conditions (LIC) then the Decide function will return "YES"; indicating that an interceptor should be launch. Conversely, if `Decide()` returns a "NO" then the interceptor should not be launched. In total there are fifteen LICs which have been implemented as boolean functions; each returning either `true` (the LIC was fulfilled) or `false` (LIC was not fulfilled).
 
-- The _Condition Met Vector_ (CMV) is boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. `CVM[i]` is assigned as ´true´ if the LIC #i has been satisfied.
+* The *Condition Met Vector* (CMV) is boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. `CVM[i]` is assigned as ´true´ if the LIC #i has been satisfied.
 
-- The _Logical Connector Matrix_ (LCM) is a 15x15 matrix with entries of logical connectors; **ANDD**, **ORR** and **NOTUSED**. It determines how an individual LIC (e.g. LIC #i) should be logically combined with another LIC (e.g. LIC #j).
+* The *Logical Connector Matrix* (LCM) is a 15x15 matrix with entries of logical connectors; **ANDD**, **ORR** and **NOTUSED**. It determines how an individual LIC (e.g. LIC #i) should be logically combined with another LIC (e.g. LIC #j).
 
-- The _Preliminary Unlocking Matrix_ (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. `PUM[i][j]` is false if either `CVM[i]` or `CVM[j]` is false and `LCM[i][j]` is ANDD.
+* The *Preliminary Unlocking Matrix* (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. `PUM[i][j]` is false if either `CVM[i]` or `CVM[j]` is false and `LCM[i][j]` is ANDD.
 
-- The _Preliminary Unlocking Vector_ (PUV) is a boolean vector that indicates whether the LIC should be considered for the interceptor to launch, where each entry corresponds to a LIC.
+* The *Preliminary Unlocking Vector* (PUV) is a boolean vector that indicates whether the LIC should be considered for the interceptor to launch, where each entry corresponds to a LIC.
 
-- The _Final Unlocking Matrix_ (FUV) is formed from combining PUV and PUM. For example, `FUV[i]` is set to `true` if either `PUV[i]` is false (LIC #i should not hold back launch) or if all elements in the `PUM[i]` row is true.
+* The *Final Unlocking Matrix* (FUV) is formed from combining PUV and PUM. For example, `FUV[i]` is set to `true` if either `PUV[i]` is false (LIC #i should not hold back launch) or if all elements in the `PUM[i]` row is true.
 
 Lastly, Decide() determines if the interceptor should launch by checking that all the entries in FUV are true. In all other cases (e.g. if at least one `FUV[i]` is false), the interceptor should not launch.
 
 ## Motivation
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 The aim of this project is to implement a program according to the modern development techniques, which was an assignment given by the course DD2480 Software Engineering Fundamentals. The project was devised from the material in "An experimental evaluation of the assumption of independence in multi-version programming" by J.C. Knight and N.G. Leveson, IEEE Transactions on Software Engineering 12(1):96-109 January 1986 (adapted by John Regehr and Martin Monperrus).
 
 ## Build Status
@@ -31,12 +33,11 @@ The aim of this project is to implement a program according to the modern develo
 The program is written in Java and follows the [Google Java Style](https://google.github.io/styleguide/javaguide.html) format.
 
 ## Getting Started
-
 Please see the following guides to set up the environment for this system:
 
-- [Gradle](https://gradle.org/install/)
-- [Travis CI](https://docs.travis-ci.com/user/tutorial/)
-- [JUnit](https://junit.org/junit5/docs/current/user-guide/)
+* [Gradle](https://gradle.org/install/)
+* [Travis CI](https://docs.travis-ci.com/user/tutorial/)
+* [JUnit](https://junit.org/junit5/docs/current/user-guide/)
 
 Note that Travis CI requires the user to have a GitHub account; how to create an account can be found [here](https://help.github.com/articles/signing-up-for-a-new-github-account/).
 
@@ -59,7 +60,10 @@ for Mac:
 ```shell
 $ cd /Users/user/my_project
 ```
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 and type:
 
 ```shell
@@ -68,9 +72,9 @@ $ git clone https://github.com/adibbin/fundamentals-lab1.git
 
 ### Prerequisites
 
-- Gradle version 5.1.1 or greater
-- JUnit version 4.12 or greater
-- JDK version 8
+* Gradle version 5.1.1 or greater
+* JUnit version 4.12 or greater
+* JDK version 8
 
 See section [Built With](#built-with) for more details on the tools.
 
@@ -95,7 +99,6 @@ Gradle is a build tool that was used to automate test for this system. To run th
 gradle build
 gradle test
 ```
-
 Running the tests should either pass or fail. If the test(s) pass, it should look something like this:
 
 ![Pass](https://github.com/adibbin/fundamentals-lab1/blob/issue/4/PassTest.png)
@@ -114,11 +117,11 @@ Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/mast
 
 ## Built With
 
-- [Gradle](https://docs.gradle.org/current/userguide/userguide.html) - open-source build automation tool.
-- [Travis CI](https://docs.travis-ci.com/) - hosted, distributed continuous integration service.
-- [JUnit](https://junit.org/junit5/docs/current/user-guide/) - open source framework.
-- [Java SE Development Kit 8](https://docs.oracle.com/javase/8/docs/) - multi-platform programming language.
-- [IntelliJ IDEA](https://www.jetbrains.com/idea/)/[Eclipse](https://www.eclipse.org/) - integrated development environment (IDE).
+* [Gradle](https://docs.gradle.org/current/userguide/userguide.html) - open-source build automation tool.
+* [Travis CI](https://docs.travis-ci.com/) - hosted, distributed continuous integration service.
+* [JUnit](https://junit.org/junit5/docs/current/user-guide/) - open source framework.
+* [Java SE Development Kit 8](https://docs.oracle.com/javase/8/docs/) - multi-platform programming language.
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/)/[Eclipse](https://www.eclipse.org/) - integrated development environment (IDE).
 
 ## Contributing
 
@@ -128,10 +131,10 @@ The work was divided between the contributors as evenly as possible. Each contri
 
 ## Authors
 
-- **Vera Blomkvist Karlsson** - [verakar](https://github.com/verakar)
-- **Gustaf Gunér** - [gustafguner](https://github.com/gustafguner)
-- **Adibbin Haider** - [adibbin](https://github.com/adibbin)
-- **Sasha Hellstenius** - [sashahe](https://github.com/sashahe)
-- **Emelie Tham** - [EmelieTham](https://github.com/EmelieTham)
+* **Vera Blomkvist Karlsson** - [verakar](https://github.com/verakar)
+* **Gustaf Gunér** - [gustafguner](https://github.com/gustafguner)
+* **Adibbin Haider** - [adibbin](https://github.com/adibbin)
+* **Sasha Hellstenius** - [sashahe](https://github.com/sashahe)
+* **Emelie Tham** - [EmelieTham](https://github.com/EmelieTham)
 
 See also the list of [contributors](https://github.com/adibbin/fundamentals-lab1/contributors) who participated in this project.

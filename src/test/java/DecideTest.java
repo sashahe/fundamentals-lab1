@@ -49,7 +49,6 @@ public class DecideTest {
   @Test
   public void testLIC1() {
     Decide decide = new Decide();
-
     // No input points
     assertFalse(decide.LIC1());
 
@@ -704,7 +703,6 @@ public class DecideTest {
   @Test
   public void testCalculateFUV() {
     Decide decide = new Decide();
-
     // PUV and PUM are default initialised to false
     // False PUV should yield all true values in FUV
     decide.calculateFUV();
