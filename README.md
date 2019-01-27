@@ -18,10 +18,6 @@ The Launch Interceptor Program implements a boolean function called `Decide()`, 
 Lastly, Decide() determines if the interceptor should launch by checking that all the entries in FUV are true. In all other cases (e.g. if at least one `FUV[i]` is false), the interceptor should not launch.
 
 ## Motivation
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 The aim of this project is to implement a program according to the modern development techniques, which was an assignment given by the course DD2480 Software Engineering Fundamentals. The project was devised from the material in "An experimental evaluation of the assumption of independence in multi-version programming" by J.C. Knight and N.G. Leveson, IEEE Transactions on Software Engineering 12(1):96-109 January 1986 (adapted by John Regehr and Martin Monperrus).
 
 ## Build Status
@@ -60,10 +56,7 @@ for Mac:
 ```shell
 $ cd /Users/user/my_project
 ```
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 and type:
 
 ```shell
