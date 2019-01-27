@@ -117,7 +117,7 @@ Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/mast
 
 ## Contributing
 
-Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/master/workflow.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/master/workflow.md) for details on the process for submitting pull requests to us.
 
 The work was divided between the contributors as evenly as possible. Each contributor were assigned the task of implementing at least three different LICs.
 
