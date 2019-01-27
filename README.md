@@ -72,11 +72,12 @@ See section [Built With](#built-with) for more details on the tools.
 
 ## How to run
 
-The program will run an instance of `Decide()` with defined global declarations, which are the pre-determined radar tracking data. The program can be compiled and run through the console by using the following commands:
+The program will run an instance of `Decide()` with defined global declarations, which are the pre-determined radar tracking data and the parameters for LIC calculations. Modify the radar data in Decide.java and the parameters in Parameters.java to run the program with custom data. The program can be compiled and run through the console by using the following commands from the project root folder:
 
 ```shell
-javac src/main/java/Decide.java
-java src/main/java/Decide
+cd src/main/java/
+javac Decide.java
+java Decide
 ```
 
 ## Running Tests
