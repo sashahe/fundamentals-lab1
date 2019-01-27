@@ -74,15 +74,10 @@ See section [Built With](#built-with) for more details on the tools.
 
 ## How to run
 
--------------------------
 
 ## Running Tests
 
-Whenever a code is pushed from the local machine to GitHub, tests are performed before allowing the code to merge with the repository.
-
-If one wishes, it is also possible to perform automated tests on their local copy. See below for more information.
-
-The the test were written in JUnit; each testing the different LIC requirements, the matrices CVM, PUM, FUV as well as the Decide() function.
+Whenever a code is pushed from the local machine to GitHub, tests are performed before allowing the code to merge with the repository. The the test were written in JUnit, where each test is testing either the different LIC requirements, the functions calculating the matrices CVM, PUM, FUV as well as the Decide() function. If one wishes, it is also possible to perform automated tests on their local copy. See below for more information.
 
 ### Testing on local machine
 
