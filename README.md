@@ -1,4 +1,4 @@
-# Launch Interceptor Program: Requirements Specification TESTING COMMIT
+# Launch Interceptor Program: Requirements Specification
 
 Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor. 
 
