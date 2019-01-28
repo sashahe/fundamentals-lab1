@@ -40,11 +40,10 @@ public class Decide {
     return false;
   }
 
-  /*
-   * There exists at least one set of three consecutive data points
-   * that cannot all be contained within or on a circle of radius RADIUS1.
-   * (0 ≤ RADIUS1)
-   */
+  // Returns true if LIC1 is true
+  // There exists at least one set of three consecutive data points
+  // that cannot all be contained within or on a circle of radius RADIUS1.
+  // (0 ≤ RADIUS1)
   public boolean LIC1() {
     if (this.numpoints < 3) {
       return false;
@@ -196,14 +195,13 @@ public class Decide {
     return false;
   }
 
-  /*
-   * There exists at least one set of three data points separated by exactly A_PTS and B_PTS
-   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
-   * The condition is not met when NUMPOINTS < 5.
-   * 1≤A PTS,1≤B PTS
-   * A_PTS+B_PTS ≤ (NUMPOINTS−3)
-   */
-
+  // Returns true if LIC8 is true
+  // There exists at least one set of three data points separated by exactly A_PTS and B_PTS
+  // consecutive intervening points, respectively, that cannot be contained within or on a circle of
+  // radius RADIUS1.
+  // The condition is not met when NUMPOINTS < 5.
+  // 1≤A PTS,1≤B PTS
+  // A_PTS+B_PTS ≤ (NUMPOINTS−3)
   public boolean LIC8() {
     if (this.numpoints < 5) {
       return false;
@@ -295,14 +293,16 @@ public class Decide {
     return false;
   }
 
-  /*
-   * There exists at least one set of three data points, separated by exactly A PTS and B PTS
-   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
-   * In addition, there exists at least one set of three data points (which can be the same or different
-   * from the three data points just mentioned) separated by exactly A PTS and B PTS
-   * consecutive intervening points, respectively, that can be contained in or on a circle of radius RADIUS2.
-   * Both parts must be true for the LIC to be true. The condition is not met when NUMPOINTS < 5.
-   */
+  // Returns true if LIC13 is true
+  // There exists at least one set of three data points, separated by exactly A PTS and B PTS
+  // consecutive intervening points, respectively, that cannot be contained within or on a circle of
+  // radius RADIUS1.
+  // In addition, there exists at least one set of three data points (which can be the same or
+  // different
+  // from the three data points just mentioned) separated by exactly A PTS and B PTS
+  // consecutive intervening points, respectively, that can be contained in or on a circle of radius
+  // RADIUS2.
+  // Both parts must be true for the LIC to be true. The condition is not met when NUMPOINTS < 5.
   public boolean LIC13() {
     if (this.numpoints < 5 || !this.LIC8()) {
       return false;
@@ -390,6 +390,7 @@ public class Decide {
     }
   }
 
+  // Returns true if all elements of FUV is true
   public boolean checkFUV() {
     // Check if all values are true,
     for (int i = 0; i < 15; i++) {
@@ -438,11 +439,9 @@ public class Decide {
     return distance;
   }
 
-  /*
-   * Calculates the angle between three points.
-   * The second point out of the given three points
-   * is always the vertex of the angle.
-   */
+  // Calculates the angle between three points.
+  // The second point out of the given three points
+  // is always the vertex of the angle.
   private double calculateAngle(int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];
@@ -467,6 +466,8 @@ public class Decide {
     }
   }
 
+  // Calculate the area of the triangle created by the three points
+  // See https://www.mathopenref.com/coordtrianglearea.html
   private double getArea(int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];
@@ -479,7 +480,7 @@ public class Decide {
   }
 
   // Calculates the distance from a point to a line joining two points A and B
-  // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+  // See https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
   private double calculatePointToLineDistance(int i, int n, int p) {
     double Ax = X[i];
     double Ay = Y[i];
@@ -493,10 +494,8 @@ public class Decide {
     return dividend / divisor;
   }
 
-  /*
-   * Used in LIC1, LIC8 and LIC13
-   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
-   */
+  // Used in LIC1, LIC8 and LIC13
+  // See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
   private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {
     double X1 = X[i], Y1 = Y[i];
     double X2 = X[j], Y2 = Y[j];
