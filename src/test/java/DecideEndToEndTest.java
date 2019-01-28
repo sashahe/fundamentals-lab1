@@ -1,8 +1,26 @@
 import static org.junit.Assert.*;
 
-import org.junit.Test;
+import java.io.*;
+import org.junit.*;
 
 public class DecideEndToEndTest {
+
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+  private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+  private final PrintStream originalOut = System.out;
+  private final PrintStream originalErr = System.err;
+
+  @Before
+  public void setUpStreams() {
+    System.setOut(new PrintStream(outContent));
+    System.setErr(new PrintStream(errContent));
+  }
+
+  @After
+  public void restoreStreams() {
+    System.setOut(originalOut);
+    System.setErr(originalErr);
+  }
 
   // Test with three coordinates should result in "no" if we require that all
   // LICS are true.
@@ -70,6 +88,8 @@ public class DecideEndToEndTest {
     }
 
     d.decide();
+
+    assertEquals("no", outContent.toString().trim());
   }
 
   @Test
@@ -139,6 +159,7 @@ public class DecideEndToEndTest {
     }
 
     d.decide();
+    assertEquals("yes", outContent.toString().trim());
   }
 
   @Test
@@ -212,5 +233,7 @@ public class DecideEndToEndTest {
     }
 
     d.decide();
+
+    assertEquals("yes", outContent.toString().trim());
   }
 }
