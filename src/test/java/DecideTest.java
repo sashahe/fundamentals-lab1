@@ -297,11 +297,11 @@ public class DecideTest {
     decide.Y[1] = 5;
     assertFalse(decide.LIC6());
 
-    // the line joining (0,0) and (1,0) shouldn't continue along the x-axis
-    // so a point at (100, 1) should have a distance >5.5
+    // the line joining (0,0) and (1,0) should continue along the x-axis
+    // so a point at (100, 1) shouldn't have a distance >5.5
     decide.X[1] = 100;
     decide.Y[1] = 1;
-    assertTrue(decide.LIC6());
+    assertFalse(decide.LIC6());
 
     // all consecutive points do not need to have a distance >5.5
     // and it can be any N consecutive points among all data points
@@ -322,6 +322,19 @@ public class DecideTest {
     decide.X[2] = 10;
     decide.Y[2] = 0;
     assertTrue(decide.LIC6());
+
+    // Three points on a line should not fulfill the requirement of
+    // a point having distance > 1 to the line
+    decide.numpoints = 3;
+    decide.parameters.N_PTS = 3;
+    decide.parameters.DIST = 1;
+    decide.X[0] = 0;
+    decide.Y[0] = 0;
+    decide.X[1] = 1;
+    decide.Y[1] = 1;
+    decide.X[2] = 2;
+    decide.Y[2] = 2;
+    assertFalse(decide.LIC6());
   }
 
   @Test

@@ -109,6 +109,7 @@ public class Decide {
             numQuads++;
             quad1 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 2
         if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
@@ -116,6 +117,7 @@ public class Decide {
             numQuads++;
             quad2 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 3
         if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
@@ -123,6 +125,7 @@ public class Decide {
             numQuads++;
             quad3 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 4
         if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
@@ -130,7 +133,6 @@ public class Decide {
             numQuads++;
             quad4 = true;
           }
-          if (numQuads > parameters.QUADS) return true;
         }
       }
       if (numQuads > parameters.QUADS) return true;
@@ -169,20 +171,20 @@ public class Decide {
 
     for (int i = 0; i <= this.numpoints - n; i++) {
       X1 = X[i];
-      Xn = X[i + n];
+      Xn = X[i + n - 1];
       Y1 = Y[i];
-      Yn = Y[i + n];
+      Yn = Y[i + n - 1];
 
       // Special case with coincident first and last point
-      if (X1 == Y1 && Xn == Yn) {
-        for (int j = i; j < i + n; j++) {
+      if (X1 == Xn && Y1 == Yn) {
+        for (int j = i + 1; j < i + n - 1; j++) {
           dist = calculateDistance(i, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
         }
         // otherwise
       } else {
-        for (int j = i; j < i + n; j++) {
-          dist = calculatePointToLineDistance(i, i + n, j);
+        for (int j = i + 1; j < i + n - 1; j++) {
+          dist = calculatePointToLineDistance(i, i + n - 1, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
         }
       }
@@ -442,9 +444,7 @@ public class Decide {
     }
   }
 
-  public Decide() {
-    decide();
-  }
+  public Decide() {}
 
   public static void main(String args[]) {
     Decide decide = new Decide();
