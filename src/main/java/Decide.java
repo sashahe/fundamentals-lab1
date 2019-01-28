@@ -163,13 +163,13 @@ public class Decide {
 
       // Special case with coincident first and last point
       if (X1 == Xn && Y1 == Yn) {
-        for (int j = i; j < i + n; j++) {
+        for (int j = i + 1; j < i + n - 1; j++) {
           dist = calculateDistance(i, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
         }
         // otherwise
       } else {
-        for (int j = i; j < i + n; j++) {
+        for (int j = i + 1; j < i + n - 1; j++) {
           dist = calculatePointToLineDistance(i, i + n - 1, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
         }
