@@ -720,7 +720,7 @@ public class DecideTest {
     // True PUV[i] and 1 false PUM[i][x]: false FUV[i]
     for (int i = 0; i < 15; i++) {
       for (int j = 0; j < 15; j++) {
-        decide.PUM[i][j] = true;
+        if (i != j) decide.PUM[i][j] = true;
       }
     }
     decide.PUM[3][6] = false;
@@ -729,7 +729,7 @@ public class DecideTest {
     assertFalse(decide.FUV[3]);
     assertTrue(decide.FUV[4]);
 
-    // True PUV[i] and all true PUM[i][x]: true FUV[i]
+    // True PUV[i] and all true PUM[i][x!=i]: true FUV[i]
     decide.PUM[3][6] = true;
     decide.calculateFUV();
     for (int i = 0; i < 15; i++) {

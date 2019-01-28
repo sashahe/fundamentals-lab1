@@ -3,13 +3,13 @@
 Implements the Launch Interceptor Program which is a tool used to determine whether an input of radar tracking information fulfills the requirements of launching an interceptor. 
 
 ## Description
-The Launch Interceptor Program implements a boolean function called `Decide()`, which determines whether an interceptor should be launch. If the radar tracking information produces a certain combination of Launch Interceptor Conditions (LIC) then the Decide function will return "YES"; indicating that an interceptor should be launch. Conversely, if `Decide()` returns a "NO" then the interceptor should not be launched. In total there are fifteen LICs which have been implemented as boolean functions; each returning either `true` (the LIC was fulfilled) or `false` (LIC was not fulfilled).
+The Launch Interceptor Program implements a boolean function called `Decide()`, which determines whether an interceptor should be launched. If the radar tracking information produces a certain combination of Launch Interceptor Conditions (LIC) then the Decide function will return "YES"; indicating that an interceptor should be launched. Conversely, if `Decide()` returns "NO" then the interceptor should not be launched. In total there are fifteen LICs which have been implemented as boolean functions; each returning either `true` (the LIC was fulfilled) or `false` (LIC was not fulfilled).
 
-* The *Condition Met Vector* (CMV) is boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. `CVM[i]` is assigned as ´true´ if the LIC #i has been satisfied.
+* The *Condition Met Vector* (CMV) is a boolean vector with 15 entries, each corresponding to the satisfaction of the LICs. E.g. `CVM[i]` is ´true´ if the LIC #i has been satisfied.
 
 * The *Logical Connector Matrix* (LCM) is a 15x15 matrix with entries of logical connectors; **ANDD**, **ORR** and **NOTUSED**. It determines how an individual LIC (e.g. LIC #i) should be logically combined with another LIC (e.g. LIC #j).
 
-* The *Preliminary Unlocking Matrix* (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. `PUM[i][j]` is false if either `CVM[i]` or `CVM[j]` is false and `LCM[i][j]` is ANDD.
+* The *Preliminary Unlocking Matrix* (PUM) is a 15x15 boolean matrix in which each entry corresponds to the satisfaction of the logical combination of the LCM and CVM elements. E.g. `PUM[i][j]` is false if either `CVM[i]` or `CVM[j]` is false and `LCM[i][j]` is **ANDD**.
 
 * The *Preliminary Unlocking Vector* (PUV) is a boolean vector that indicates whether the LIC should be considered for the interceptor to launch, where each entry corresponds to a LIC.
 
@@ -51,7 +51,7 @@ for Windows:
 $ cd /c/user/my_project
 ```
 
-for Mac:
+for macOS:
 
 ```shell
 $ cd /Users/user/my_project
@@ -73,20 +73,27 @@ See section [Built With](#built-with) for more details on the tools.
 
 ## How to run
 
-The program will run an instance of `Decide()` with defined global declarations, which are the pre-determined radar tracking data. The program can be compiled and run through the console by using the following commands:
+The program will run an instance of `Decide()` with defined global declarations, which are the pre-determined radar tracking data and the parameters for LIC calculations. Modify the radar data in Decide.java and the parameters in Parameters.java to run the program with custom data. The program can be compiled and run through the console by using the following commands from the project root folder:
 
 ```shell
-javac src/main/java/Decide.java
-java src/main/java/Decide
+cd src/main/java/
+javac Decide.java
+java Decide
+```
+or 
+
+```shell
+gradle build
+gradle run
 ```
 
 ## Running Tests
 
-Whenever a code is pushed from the local machine to GitHub, tests are performed before allowing the code to merge with the repository. The the test were written in JUnit, where each test is testing either the different LIC requirements, the functions calculating the matrices CVM, PUM, FUV as well as the Decide() function. If one wishes, it is also possible to perform automated tests on their local copy. See below for more information.
+Whenever code is pushed from the local machine to GitHub, tests are performed before allowing the code to merge with the repository. The tests were written using JUnit, where each test is testing either the different LIC requirements, the functions calculating the matrices CVM, PUM, and FUV as well as the Decide() function. If one wishes, it is also possible to perform automated tests on their local copy. See below for more information.
 
 ### Testing on local machine
 
-Gradle is a build tool that was used to automate test for this system. To run the automated tests use the following commands:
+Gradle is a build tool that was used to automate testing for this system. To run the automated tests use the following commands:
 
 ```shell
 gradle build
@@ -94,11 +101,11 @@ gradle test
 ```
 Running the tests should either pass or fail. If the test(s) pass, it should look something like this:
 
-![Pass](https://github.com/adibbin/fundamentals-lab1/blob/issue/4/PassTest.png)
+![Pass](https://github.com/adibbin/fundamentals-lab1/blob/master/PassTest.png)
 
 and if it fails:
 
-![Fail](https://github.com/adibbin/fundamentals-lab1/blob/issue/4/FailTest.png)
+![Fail](https://github.com/adibbin/fundamentals-lab1/blob/master/FailTest.png)
 
 The tests also verifies whether or not the Java code follows our code style. See the section [Code Style](#code-style) for further details.
 
@@ -120,7 +127,7 @@ Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/mast
 
 Please read [workflow.md](https://github.com/adibbin/fundamentals-lab1/blob/master/workflow.md) for details on the process for submitting pull requests to us.
 
-The work was divided between the contributors as evenly as possible. Each contributor were assigned the task of implementing at least three different LICs.
+The work was divided between the contributors as evenly as possible. Each contributor was assigned the task of implementing at least three different LICs.
 
 ## Authors
 
