@@ -78,13 +78,13 @@ The program will run an instance of `Decide()` with defined global declarations,
 ```shell
 cd src/main/java/
 javac Decide.java
-java Decide
+java Decide -run
 ```
 or 
 
 ```shell
 gradle build
-gradle run
+gradle run --args='-run'
 ```
 
 ## Running Tests
