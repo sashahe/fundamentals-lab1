@@ -109,6 +109,7 @@ public class Decide {
             numQuads++;
             quad1 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 2
         if ((X[i + j] <= 0) && (Y[i + j] >= 0)) {
@@ -116,6 +117,7 @@ public class Decide {
             numQuads++;
             quad2 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 3
         if ((X[i + j] <= 0) && (Y[i + j] <= 0)) {
@@ -123,6 +125,7 @@ public class Decide {
             numQuads++;
             quad3 = true;
           }
+          continue;
         }
         // Checks if the point is in quadrant number 4
         if ((X[i + j] >= 0) && (Y[i + j] <= 0)) {
@@ -130,7 +133,6 @@ public class Decide {
             numQuads++;
             quad4 = true;
           }
-          if (numQuads > parameters.QUADS) return true;
         }
       }
       if (numQuads > parameters.QUADS) return true;
@@ -442,9 +444,7 @@ public class Decide {
     }
   }
 
-  public Decide() {
-    decide();
-  }
+  public Decide() {}
 
   public static void main(String args[]) {
     Decide decide = new Decide();
