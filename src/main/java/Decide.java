@@ -448,6 +448,7 @@ public class Decide {
 
   public static void main(String args[]) {
     Decide decide = new Decide();
+    if (args.length > 0) if ("-run".equals(args[0])) decide.decide();
   }
 
   /** **** HELPER METHODS ***** */
