@@ -51,7 +51,7 @@ for Windows:
 $ cd /c/user/my_project
 ```
 
-for OS X:
+for macOS:
 
 ```shell
 $ cd /Users/user/my_project
