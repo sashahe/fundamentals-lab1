@@ -157,12 +157,12 @@ public class Decide {
 
     for (int i = 0; i <= this.numpoints - n; i++) {
       X1 = X[i];
-      Xn = X[i + n];
+      Xn = X[i + n - 1];
       Y1 = Y[i];
-      Yn = Y[i + n];
+      Yn = Y[i + n - 1];
 
       // Special case with coincident first and last point
-      if (X1 == Y1 && Xn == Yn) {
+      if (X1 == Xn && Y1 == Yn) {
         for (int j = i; j < i + n; j++) {
           dist = calculateDistance(i, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
@@ -170,7 +170,7 @@ public class Decide {
         // otherwise
       } else {
         for (int j = i; j < i + n; j++) {
-          dist = calculatePointToLineDistance(i, i + n, j);
+          dist = calculatePointToLineDistance(i, i + n - 1, j);
           if (doubleCompare(dist, this.parameters.DIST) == COMPTYPE.GT) return true;
         }
       }
