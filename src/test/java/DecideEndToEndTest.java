@@ -48,7 +48,7 @@ public class DecideEndToEndTest {
     assertFalse(d.LIC3()); // False: Area = 0, required = 1
     assertFalse(d.LIC4()); // False: All points in one quadrand, required = 2
     assertFalse(d.LIC5()); // False: Coordinates are increasing
-    // assertFalse(d.LIC6()); // False: all points are on one line
+    assertFalse(d.LIC6()); // False: all points are on one line
     assertTrue(d.LIC7()); // True: Lenght = 0.5, distance between coords = 2
     assertFalse(d.LIC8()); // False: numpoints = 3, required 5
     assertFalse(d.LIC9()); // False: numpoints = 3, required 5
@@ -113,7 +113,7 @@ public class DecideEndToEndTest {
     assertFalse(d.LIC3()); // False: Area = 0, required = 1
     assertFalse(d.LIC4()); // False: All points in one quadrand, required = 2
     assertFalse(d.LIC5()); // False: Coordinates are increasing
-    // assertFalse(d.LIC6()); // False: all points are on one line
+    assertFalse(d.LIC6()); // False: all points are on one line
     assertTrue(d.LIC7()); // True: Lenght = 0.5, distance between coords = 2
     assertFalse(d.LIC8()); // False: numpoints = 3, required 5
     assertFalse(d.LIC9()); // False: numpoints = 3, required 5
@@ -182,7 +182,7 @@ public class DecideEndToEndTest {
     assertFalse(d.LIC3()); // False: Area = 0, required = 1
     assertFalse(d.LIC4()); // False: All points in one quadrand, required = 2
     assertFalse(d.LIC5()); // False: Coordinates are increasing
-    // assertFalse(d.LIC6()); // False: all points are on one line
+    assertFalse(d.LIC6()); // False: all points are on one line
     assertTrue(d.LIC7()); // True: Lenght = 0.5, distance between coords = 2
     assertFalse(d.LIC8()); // False: numpoints = 3, required 5
     assertFalse(d.LIC9()); // False: numpoints = 3, required 5
