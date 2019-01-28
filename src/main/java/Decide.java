@@ -28,9 +28,11 @@ public class Decide {
     GT
   };
 
-  // Returns true if LIC0 is true
-  // There exists at least one set of two consecutive data points that are a distance greater than
-  // the length, LENGTH1, apart.
+  /*
+   * Returns true if LIC0 is true
+   * There exists at least one set of two consecutive data points that are a distance greater than
+   * the length, LENGTH1, apart.
+   */
   public boolean LIC0() {
     for (int i = 0; i < numpoints - 1; i++) {
       double distance = calculateDistance(i, i + 1);
@@ -41,6 +43,7 @@ public class Decide {
   }
 
   /*
+   * Returns true if LIC1 is true
    * There exists at least one set of three consecutive data points
    * that cannot all be contained within or on a circle of radius RADIUS1.
    * (0 ≤ RADIUS1)
@@ -58,9 +61,11 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC2 is true
-  // There exists at least one set of three consecutive data points
-  // that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
+  /*
+   * Returns true if LIC2 is true
+   * There exists at least one set of three consecutive data points
+   * that forms an angle such that angle < (PI - EPSILON1) or angle > (PI + EPSILON1)
+   */
   public boolean LIC2() {
     double angle;
     for (int i = 0; i < numpoints - 2; i++) {
@@ -74,9 +79,11 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC3 is true
-  // There exists at least one set of three consecutive data points
-  // that are the vertices of a triangle with area greater than AREA1. (0 ≤ AREA1)
+  /*
+   * Returns true if LIC3 is true
+   * There exists at least one set of three consecutive data points
+   * that are the vertices of a triangle with area greater than AREA1. (0 ≤ AREA1)
+   */
   public boolean LIC3() {
     if (this.numpoints < 3) return false;
     for (int i = 0; i < this.numpoints - 2; i++) {
@@ -86,9 +93,10 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC4 is true
-  // There exists at least one set of Q_PTS data points
-  // that lie in more than QUADS quadrants.
+  /*
+   * Returns true if LIC4 is true
+   * There exists at least one set of Q_PTS data points that lie in more than QUADS quadrants.
+   */
   public boolean LIC4() {
     boolean quad1, quad2, quad3, quad4;
     quad1 = quad2 = quad3 = quad4 = false;
@@ -130,9 +138,11 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC5 is true
-  // There exists at least one set of two consecutive data points,
-  // (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
+  /*
+   * Returns true if LIC5 is true
+   * There exists at least one set of two consecutive data points,
+   * (X[i],Y[i]) and (X[j],Y[j]) such that X[j] - X[i] < 0. (where i = j-1)
+   */
   public boolean LIC5() {
     if (this.numpoints < 2) return false;
     for (int i = 0; i < this.numpoints - 1; i++) {
@@ -141,14 +151,15 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC6 is true
-  // There exists at least one set of N PTS consecutive data points such that at least one of the
-  // points lies a distance greater than DIST from the line joining the first and last of these N
-  // PTS
-  // points. If the first and last points of these N PTS are identical, then the calculated distance
-  // to compare with DIST will be the distance from the coincident point to all other points of
-  // the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
-  // (3 ≤ N PTS ≤ NUMPOINTS), (0 ≤ DIST)
+  /*
+   * Returns true if LIC6 is true
+   * There exists at least one set of N PTS consecutive data points such that at least one of the
+   * points lies a distance greater than DIST from the line joining the first and last of these
+   * N PTS points. If the first and last points of these N PTS are identical,
+   * then the calculated distance to compare with DIST will be the distance from the coincident point
+   * to all other points of the N PTS consecutive points. The condition is not met when NUMPOINTS < 3.
+   * (3 ≤ N PTS ≤ NUMPOINTS), (0 ≤ DIST)
+   */
   public boolean LIC6() {
     if (this.numpoints < 3) return false;
 
@@ -179,11 +190,12 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC7 is true
-  // There exists at least one set of two data points separated by exactly K PTS consecutive
-  // intervening
-  // points that are a distance greater than the length, LENGTH1, apart. The condition
-  // is not met when NUMPOINTS < 3.
+  /*
+   * Returns true if LIC7 is true
+   * There exists at least one set of two data points separated by exactly K PTS consecutive
+   * intervening points that are a distance greater than the length, LENGTH1, apart.
+   * The condition is not met when NUMPOINTS < 3.
+   */
   public boolean LIC7() {
     if (this.numpoints < 3) return false;
 
@@ -197,13 +209,14 @@ public class Decide {
   }
 
   /*
+   * Returns true if LIC8 is true
    * There exists at least one set of three data points separated by exactly A_PTS and B_PTS
-   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of
+   * radius RADIUS1.
    * The condition is not met when NUMPOINTS < 5.
    * 1≤A PTS,1≤B PTS
    * A_PTS+B_PTS ≤ (NUMPOINTS−3)
    */
-
   public boolean LIC8() {
     if (this.numpoints < 5) {
       return false;
@@ -220,10 +233,12 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC9 is true
-  // There exists at least one set of three points separated by C_PTS and D_PTS
-  // consecutive intervening, respectively, that form an angle such that angle < (PI - EPSILON1)
-  // or angle > (PI + EPSILON1)
+  /*
+   * Returns true if LIC9 is true
+   * There exists at least one set of three points separated by C_PTS and D_PTS
+   * consecutive intervening, respectively, that form an angle such that angle < (PI - EPSILON1)
+   * or angle > (PI + EPSILON1)
+   */
   public boolean LIC9() {
     double angle;
     int c = parameters.C_PTS;
@@ -240,11 +255,12 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC10 is true
-  // There exists at least one set of three data points separated by exactly E PTS and F PTS
-  // consecutive
-  // intervening points, respectively, that are the vertices of a triangle with area greater
-  // than AREA1. The condition is not met when NUMPOINTS < 5.
+  /*
+   * Returns true if LIC10 is true
+   * There exists at least one set of three data points separated by exactly E PTS and F PTS
+   * consecutive intervening points, respectively, that are the vertices of a triangle with
+   * area greater than AREA1. The condition is not met when NUMPOINTS < 5.
+   */
   public boolean LIC10() {
     if (this.numpoints < 5) return false;
     int e = this.parameters.E_PTS;
@@ -256,10 +272,12 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC11 is true
-  // There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
-  // exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
-  // condition is not met when NUMPOINTS < 3. 1 ≤ G PTS ≤ NUMPOINTS−2
+  /*
+   * Returns true if LIC11 is true
+   * There exists at least one set of two data points, (X[i],Y[i]) and (X[j],Y[j]), separated by
+   * exactly G PTS consecutive intervening points, such that X[j] - X[i] < 0. (where i < j ) The
+   * condition is not met when NUMPOINTS < 3. 1 ≤ G PTS ≤ NUMPOINTS−2
+   */
   public boolean LIC11() {
     if (this.numpoints < 3) return false;
     int g = this.parameters.G_PTS;
@@ -270,14 +288,16 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC12 is true
-  // There exists at least one set of two data points, separated by exactly K PTS consecutive
-  // intervening points, which are a distance greater than the length, LENGTH1, apart.
-  // In addition, there exists at least one set of two data points (which can be the same or
-  // different from
-  // the two data points just mentioned), separated by exactly K PTS consecutive intervening
-  // points, that are a distance less than the length, LENGTH2, apart. Both parts must be true
-  // for the LIC to be true. The condition is not met when NUMPOINTS < 3.
+  /*
+   * Returns true if LIC12 is true
+   * There exists at least one set of two data points, separated by exactly K PTS consecutive
+   * intervening points, which are a distance greater than the length, LENGTH1, apart.
+   * In addition, there exists at least one set of two data points (which can be the same or
+   * different from the two data points just mentioned), separated by exactly K PTS consecutive
+   * intervening points, that are a distance less than the length, LENGTH2, apart.
+   * Both parts must be true for the LIC to be true.
+   * The condition is not met when NUMPOINTS < 3.
+   */
   public boolean LIC12() {
     if (this.numpoints < 3) return false;
 
@@ -296,11 +316,14 @@ public class Decide {
   }
 
   /*
+   * Returns true if LIC13 is true
    * There exists at least one set of three data points, separated by exactly A PTS and B PTS
-   * consecutive intervening points, respectively, that cannot be contained within or on a circle of radius RADIUS1.
-   * In addition, there exists at least one set of three data points (which can be the same or different
-   * from the three data points just mentioned) separated by exactly A PTS and B PTS
-   * consecutive intervening points, respectively, that can be contained in or on a circle of radius RADIUS2.
+   * consecutive intervening points, respectively, that cannot be contained within or on a circle of
+   * radius RADIUS1.
+   * In addition, there exists at least one set of three data points (which can be the same or
+   * different from the three data points just mentioned) separated by exactly A PTS and B PTS
+   * consecutive intervening points, respectively, that can be contained in or on a circle of radius
+   * RADIUS2.
    * Both parts must be true for the LIC to be true. The condition is not met when NUMPOINTS < 5.
    */
   public boolean LIC13() {
@@ -320,12 +343,14 @@ public class Decide {
     return false;
   }
 
-  // Returns true if LIC14 is true
-  // LIC10 + In addition, there exist three data points (which can be the same or different
-  // from the three data points just mentioned) separated by exactly E PTS and F PTS
-  // consecutive intervening points, respectively, that are the vertices of a triangle
-  // with area less than AREA2. Both parts must be true for the LIC to be true.
-  // The condition is not met when NUMPOINTS < 5.
+  /*
+   * Returns true if LIC14 is true
+   * LIC10 + In addition, there exist three data points (which can be the same or different
+   * from the three data points just mentioned) separated by exactly E PTS and F PTS
+   * consecutive intervening points, respectively, that are the vertices of a triangle
+   * with area less than AREA2. Both parts must be true for the LIC to be true.
+   * The condition is not met when NUMPOINTS < 5.
+   */
   public boolean LIC14() {
     if (this.numpoints < 5 || !LIC10()) return false;
     int e = this.parameters.E_PTS;
@@ -356,10 +381,12 @@ public class Decide {
     CMV[14] = LIC14();
   };
 
-  // The entries in the LCM represent the logical connectors to be used
-  // between pairs of LICs to determine the corresponding entry in the PUMe.
-  // LCM[i,j] represents the boolean operator to be applied to CMV[i] and CMV[j].
-  // PUM[i,j] is set according to the result of this operation
+  /*
+   * The entries in the LCM represent the logical connectors to be used
+   * between pairs of LICs to determine the corresponding entry in the PUMe.
+   * LCM[i,j] represents the boolean operator to be applied to CMV[i] and CMV[j].
+   * PUM[i,j] is set according to the result of this operation
+   */
   public void calculatePUM() {
     for (int i = 0; i < 15; i++) {
       for (int j = 0; j < 15; j++) {
@@ -376,20 +403,25 @@ public class Decide {
     }
   }
 
-  // FUV is a 15x1 vector
-  // FUV[i] is true if PUV[i] is false or all elements PUM[i][x] are true.
+  /*
+   * FUV is a 15x1 vector
+   * FUV[i] is true if PUV[i] is false or all elements PUM[i][x!=i] are true.
+   */
   public void calculateFUV() {
     // PUM (***) PUV -> FUV
     for (int i = 0; i < 15; i++) {
       boolean PUMtrue = true;
       for (int j = 0; j < 15; j++) {
-        if (!(this.PUM[i][j])) PUMtrue = false;
+        if (i != j && !(this.PUM[i][j])) PUMtrue = false;
       }
       if (!(this.PUV[i]) || PUMtrue) this.FUV[i] = true;
       else this.FUV[i] = false;
     }
   }
 
+  /*
+   * Returns true if all elements of FUV is true
+   */
   public boolean checkFUV() {
     // Check if all values are true,
     for (int i = 0; i < 15; i++) {
@@ -425,7 +457,9 @@ public class Decide {
     return COMPTYPE.GT;
   }
 
-  // Calculates the distance between two coordinates.
+  /*
+   * Calculates the distance between two coordinates.
+   */
   private double calculateDistance(int i, int j) {
     double Ax, Bx, Ay, By;
     Ax = X[i];
@@ -467,6 +501,10 @@ public class Decide {
     }
   }
 
+  /*
+   * Calculate the area of the triangle created by the three points
+   * See https:*www.mathopenref.com/coordtrianglearea.html
+   */
   private double getArea(int i, int j, int k) {
     double Ax, Bx, Cx, Ay, By, Cy;
     Ax = X[i];
@@ -478,8 +516,10 @@ public class Decide {
     return Math.abs(Ax * (By - Cy) + Bx * (Cy - Ay) + Cx * (Ay - By)) / 2;
   }
 
-  // Calculates the distance from a point to a line joining two points A and B
-  // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+  /*
+   * Calculates the distance from a point to a line joining two points A and B
+   * See https:*en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+   */
   private double calculatePointToLineDistance(int i, int n, int p) {
     double Ax = X[i];
     double Ay = Y[i];
@@ -495,7 +535,7 @@ public class Decide {
 
   /*
    * Used in LIC1, LIC8 and LIC13
-   * See http://www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
+   * See http:*www.ambrsoft.com/TrigoCalc/Circle3D.htm for equation
    */
   private Double getRadiusOfCircleFrom3Points(int i, int j, int k) {
     double X1 = X[i], Y1 = Y[i];
